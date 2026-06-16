@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { CartProvider } from "@/context/CartContext";
+import { CartDrawer, CartFloatButton } from "@/components/CartDrawer";
+import FloatContacts from "@/components/FloatContacts";
+import ChatWidget from "@/components/ChatWidget";
 
 export const metadata: Metadata = {
   title: "Автобакс — автозапчасти в Кемерово",
@@ -14,7 +18,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru">
-      <body>{children}</body>
+      <body>
+        <CartProvider>
+          {children}
+          <CartDrawer />
+          <CartFloatButton />
+          <FloatContacts />
+          <ChatWidget />
+        </CartProvider>
+      </body>
     </html>
   );
 }

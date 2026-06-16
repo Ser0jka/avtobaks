@@ -1,0 +1,158 @@
+/* Trigger button */
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--red, #e81722);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+  position: relative;
+  z-index: 10;
+}
+
+.trigger:hover { background: #c4111c; }
+
+.triggerIcon {
+  font-size: 1rem;
+  transition: transform 0.2s;
+}
+
+.triggerIcon.open { transform: rotate(45deg); }
+
+/* Wrapper (for positioning) */
+.wrapper {
+  position: relative;
+}
+
+/* Overlay behind panel */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+}
+
+/* Panel */
+.panel {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  z-index: 95;
+  width: 320px;
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e3e7ec;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.14);
+  overflow: hidden;
+  animation: fadeDown 0.18s ease;
+}
+
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* VIN mini block */
+.panelVin {
+  padding: 1rem;
+  background: #f5f7fa;
+  border-bottom: 1px solid #e3e7ec;
+}
+
+.panelVinTitle {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #11151b;
+  margin-bottom: 0.3rem;
+}
+
+.panelVinDesc {
+  font-size: 0.78rem;
+  color: #66717e;
+  margin-bottom: 0.7rem;
+  line-height: 1.4;
+}
+
+.panelVinBtns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.btnGreen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  background: #16a34a;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  border-radius: 7px;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.btnGreen:hover { background: #15803d; }
+
+.btnOutline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  background: #fff;
+  color: #11151b;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 7px;
+  border: 1px solid #e3e7ec;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.btnOutline:hover { background: #f5f7fa; }
+
+/* Category list */
+.catList {
+  list-style: none;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.catItem {
+  border-bottom: 1px solid #f0f2f5;
+}
+.catItem:last-child { border-bottom: none; }
+
+.catLink {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.65rem 1rem;
+  font-size: 0.875rem;
+  color: #11151b;
+  text-decoration: none;
+  transition: background 0.12s, color 0.12s;
+}
+
+.catLink:hover {
+  background: #fff0f0;
+  color: #e81722;
+}
+
+.catIcon {
+  font-size: 1rem;
+  width: 1.4rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.catArrow {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: #adb5c2;
+}

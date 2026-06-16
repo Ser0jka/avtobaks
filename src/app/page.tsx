@@ -1,16 +1,18 @@
 import type { CSSProperties } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import styles from "./page.module.css";
+import HitProducts from "@/components/HitProducts";
+import CatalogDropdown from "@/components/CatalogDropdown";
+import VinSearchForm from "@/components/VinSearchForm";
 
 const phone = "+7 906 986 66 61";
 
 const navItems = [
-  "Каталог",
-  "Подбор по VIN",
-  "Поставщики",
-  "Дром",
-  "О компании",
-  "Контакты",
+  { label: "Подбор по VIN", href: "#подбор-по-vin" },
+  { label: "Поставщики", href: "#поставщики" },
+  { label: "О компании", href: "#о-компании" },
+  { label: "Контакты", href: "/contacts" },
 ];
 
 const facts = [
@@ -22,16 +24,16 @@ const facts = [
 ];
 
 const categories = [
-  ["Двигатели", "70% 34%"],
-  ["Подвеска и ходовая", "28% 36%"],
-  ["Кузовные детали", "52% 37%"],
-  ["Электрика", "76% 37%"],
-  ["Трансмиссия", "92% 37%"],
-  ["Расходники", "9% 42%"],
-  ["Автооптика", "31% 42%"],
-  ["Автоинструмент", "48% 42%"],
-  ["Салон", "67% 42%"],
-  ["Коврики и аксессуары", "88% 42%"],
+  ["Двигатели", "70% 34%", "dvigatel"],
+  ["Подвеска и ходовая", "28% 36%", "podveska"],
+  ["Кузовные детали", "52% 37%", "kuzov"],
+  ["Электрика", "76% 37%", "electrika"],
+  ["Трансмиссия", "92% 37%", "transmissiya"],
+  ["Расходники", "9% 42%", "filtry"],
+  ["Автооптика", "31% 42%", "optika"],
+  ["Автоинструмент", "48% 42%", "instrumenty"],
+  ["Салон", "67% 42%", "salon"],
+  ["Коврики и аксессуары", "88% 42%", "kovriki"],
 ];
 
 const steps = [
@@ -105,9 +107,10 @@ export default function Home() {
             Автобакс
           </a>
           <nav className={styles.nav} aria-label="Главная навигация">
+            <CatalogDropdown />
             {navItems.map((item) => (
-              <a key={item} href={`#${item.toLowerCase().replaceAll(" ", "-")}`}>
-                {item}
+              <a key={item.label} href={item.href}>
+                {item.label}
               </a>
             ))}
           </nav>
@@ -132,9 +135,9 @@ export default function Home() {
               для иномарок в Кемерово.
             </p>
             <div className={styles.heroActions}>
-              <a className={styles.redButton} href="#catalog">
+              <Link className={styles.redButton} href="/catalog">
                 Перейти в каталог
-              </a>
+              </Link>
               <a className={styles.outlineButton} href="#search">
                 Подобрать запчасть
               </a>
@@ -142,7 +145,7 @@ export default function Home() {
           </div>
           <div className={styles.heroImage} aria-hidden="true">
             <Image
-              src="/avtobaks-reference.png"
+              src="/hero.png"
               alt=""
               fill
               priority
@@ -167,38 +170,7 @@ export default function Home() {
           <p className={styles.kicker}>Быстрый поиск запчастей</p>
           <h2>Найдите деталь по VIN, артикулу или категории</h2>
         </div>
-        <form className={styles.searchForm}>
-          <input placeholder="Введите VIN или артикул" aria-label="VIN или артикул" />
-          <select aria-label="Марка" defaultValue="">
-            <option value="" disabled>
-              Марка
-            </option>
-            <option>Toyota</option>
-            <option>Nissan</option>
-            <option>BMW</option>
-          </select>
-          <select aria-label="Модель" defaultValue="">
-            <option value="" disabled>
-              Модель
-            </option>
-            <option>Camry</option>
-            <option>X-Trail</option>
-            <option>3 Series</option>
-          </select>
-          <select aria-label="Категория" defaultValue="">
-            <option value="" disabled>
-              Категория
-            </option>
-            <option>Подвеска</option>
-            <option>Двигатель</option>
-            <option>Электрика</option>
-          </select>
-          <button type="button">Найти</button>
-        </form>
-        <aside className={styles.helpBox}>
-          <strong>Не знаете артикул?</strong>
-          <p>Оставьте заявку, поможем подобрать нужную деталь вручную.</p>
-        </aside>
+        <VinSearchForm />
       </section>
 
       <section className={styles.section} id="catalog">
@@ -207,10 +179,15 @@ export default function Home() {
           <a href="#request">Нужна консультация</a>
         </div>
         <div className={styles.categoryGrid}>
-          {categories.map(([title, position]) => (
-            <article className={styles.categoryCard} key={title} style={visualStyle(position)}>
+          {categories.map(([title, position, slug]) => (
+            <Link
+              href={`/catalog?category=${slug}`}
+              className={styles.categoryCard}
+              key={title}
+              style={visualStyle(position)}
+            >
               <span>{title}</span>
-            </article>
+            </Link>
           ))}
         </div>
       </section>
@@ -229,25 +206,7 @@ export default function Home() {
       </section>
 
       <section className={styles.section}>
-        <div className={styles.sectionHead}>
-          <h2>Хиты каталога</h2>
-          <a href="#catalog">Смотреть все</a>
-        </div>
-        <div className={styles.productGrid}>
-          {products.map(([title, article, price, position]) => (
-            <article className={styles.productCard} key={article}>
-              <div className={styles.productImage} style={visualStyle(position)} />
-              <h3>{title}</h3>
-              <p>Артикул: {article}</p>
-              <span>В наличии</span>
-              <strong>{price}</strong>
-              <div className={styles.productActions}>
-                <a href="#request">Подробнее</a>
-                <a href="#request">Запросить</a>
-              </div>
-            </article>
-          ))}
-        </div>
+        <HitProducts />
       </section>
 
       <section className={`${styles.section} ${styles.splitBand}`}>
@@ -346,8 +305,8 @@ export default function Home() {
         <div>
           <strong>Разделы</strong>
           {navItems.map((item) => (
-            <a key={item} href="#">
-              {item}
+            <a key={item.label} href={item.href}>
+              {item.label}
             </a>
           ))}
         </div>

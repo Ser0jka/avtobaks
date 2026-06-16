@@ -1,0 +1,161 @@
+/* Wrapper */
+.wrap {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.55rem;
+}
+
+/* Contact items list */
+.items {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.45rem;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.items.open {
+  pointer-events: auto;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Individual contact item */
+.item {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  text-decoration: none;
+  animation: slideUp 0.18s ease both;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateX(8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.item:nth-child(1) { animation-delay: 0.00s; }
+.item:nth-child(2) { animation-delay: 0.04s; }
+.item:nth-child(3) { animation-delay: 0.08s; }
+.item:nth-child(4) { animation-delay: 0.12s; }
+
+.label {
+  background: #11151b;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  opacity: 0;
+  transform: translateX(6px);
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+.item:hover .label {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Icon circle */
+.icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.22);
+  transition: transform 0.15s, box-shadow 0.15s;
+  flex-shrink: 0;
+}
+
+.item:hover .icon {
+  transform: scale(1.08);
+  box-shadow: 0 5px 18px rgba(0,0,0,0.28);
+}
+
+.icon svg {
+  width: 1.4rem;
+  height: 1.4rem;
+  fill: #fff;
+}
+
+/* Per-service colors */
+.iconPhone   { background: #e81722; }
+.iconWa      { background: #25d366; }
+.iconTg      { background: #2AABEE; }
+.iconViber   { background: #7360f2; }
+
+/* Main toggle button */
+.toggle {
+  width: 3.4rem;
+  height: 3.4rem;
+  border-radius: 50%;
+  background: #e81722;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 18px rgba(232,23,34,0.42);
+  transition: background 0.15s, transform 0.2s, box-shadow 0.15s;
+  position: relative;
+  z-index: 1;
+}
+
+.toggle:hover {
+  background: #c4111c;
+  transform: scale(1.06);
+  box-shadow: 0 6px 22px rgba(232,23,34,0.5);
+}
+
+.toggle svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: #fff;
+  transition: transform 0.25s, opacity 0.2s;
+}
+
+.toggle .iconClose {
+  position: absolute;
+  opacity: 0;
+  transform: rotate(-45deg) scale(0.6);
+}
+
+.toggle.open .iconMenu {
+  opacity: 0;
+  transform: rotate(45deg) scale(0.6);
+}
+
+.toggle.open .iconClose {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+/* Pulse ring when closed */
+.toggle::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid rgba(232,23,34,0.4);
+  animation: pulse 2.2s ease-out infinite;
+}
+
+.toggle.open::after { display: none; }
+
+@keyframes pulse {
+  0%   { transform: scale(1);   opacity: 0.8; }
+  70%  { transform: scale(1.35); opacity: 0; }
+  100% { transform: scale(1.35); opacity: 0; }
+}

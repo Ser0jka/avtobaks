@@ -511,6 +511,24 @@
   background: var(--red);
 }
 
+.cartBtn {
+  display: grid;
+  place-items: center;
+  min-height: 2rem;
+  border-radius: 0.32rem;
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: #fff;
+  background: var(--red);
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.cartBtn:hover {
+  background: #c4111c;
+}
+
 .splitBand {
   display: grid;
   grid-template-columns: minmax(18rem, 0.8fr) 1.2fr;
