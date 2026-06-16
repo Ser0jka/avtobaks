@@ -1,4 +1,3 @@
-import Groq from "groq-sdk";
 import { NextRequest, NextResponse } from "next/server";
 
 const SYSTEM_PROMPT = `Ты — Макс, умный помощник интернет-магазина автозапчастей «Автобакс» в Кемерово.
@@ -31,32 +30,49 @@ export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json();
 
-    const apiKey = process.env.GROQ_API_KEY;
-    const model = process.env.GROQ_MODEL ?? "llama-3.3-70b-versatile";
+    const apiKey = process.env.OPENROUTER_API_KEY;
+    const model = process.env.OPENROUTER_MODEL ?? "meta-llama/llama-3.3-70b-instruct:free";
 
     if (!apiKey) {
-      return NextResponse.json({ error: "GROQ_API_KEY не настроен" }, { status: 500 });
+      return NextResponse.json({ error: "OPENROUTER_API_KEY не настроен" }, { status: 500 });
     }
 
-    const groq = new Groq({ apiKey });
-
-    const completion = await groq.chat.completions.create({
-      model,
-      messages: [
-        { role: "system", content: SYSTEM_PROMPT },
-        ...messages,
-      ],
-      max_tokens: 600,
-      temperature: 0.7,
+    const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`,
+        "HTTP-Referer": "https://avtobaks.ru",
+        "X-Title": "Автобакс",
+      },
+      body: JSON.stringify({
+        model,
+        messages: [
+          { role: "system", content: SYSTEM_PROMPT },
+          ...messages,
+        ],
+        max_tokens: 600,
+        temperature: 0.7,
+      }),
     });
 
+    const data = await res.json();
+
+    if (!res.ok) {
+      console.error("OpenRouter error:", data);
+      return NextResponse.json(
+        { error: data.error?.message ?? "Ошибка API" },
+        { status: res.status }
+      );
+    }
+
     const reply =
-      completion.choices[0]?.message?.content ??
+      data.choices?.[0]?.message?.content ??
       "Не смог сформулировать ответ. Попробуйте ещё раз.";
 
     return NextResponse.json({ reply });
   } catch (err: unknown) {
-    console.error("Groq API error:", err);
+    console.error("OpenRouter API error:", err);
     const message = err instanceof Error ? err.message : "Ошибка сервера";
     return NextResponse.json({ error: message }, { status: 500 });
   }
