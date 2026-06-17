@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import heroPhoto from "../../../public/hero.png";
+import heroPhoto from "../../../public/hero.webp";
 import styles from "@/app/page.module.css";
 
 export default function HomeHero() {

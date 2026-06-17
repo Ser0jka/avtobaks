@@ -1,5 +1,5 @@
 import type { StaticImageData } from "next/image";
-import partsPhoto from "../../public/сcategories/1.png";
+import partsPhoto from "../../public/сcategories/1.webp";
 
 export type Product = {
   id: string;

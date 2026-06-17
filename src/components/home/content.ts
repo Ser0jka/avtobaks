@@ -36,16 +36,16 @@ export const facts = [
 ];
 
 export const categories = [
-  { title: "Двигатели", slug: "dvigatel", image: "/сcategories/1.png" },
-  { title: "Подвеска и ходовая", slug: "podveska", image: "/сcategories/2.png" },
-  { title: "Кузовные детали", slug: "kuzov", image: "/сcategories/3.png" },
-  { title: "Электрика", slug: "electrika", image: "/сcategories/4.png" },
-  { title: "Трансмиссия", slug: "transmissiya", image: "/сcategories/5.png" },
-  { title: "Расходники", slug: "filtry", image: "/сcategories/6.png" },
-  { title: "Автооптика", slug: "optika", image: "/сcategories/7.png" },
-  { title: "Автоинструмент", slug: "instrumenty", image: "/сcategories/8.png" },
-  { title: "Салон", slug: "salon", image: "/сcategories/9.png" },
-  { title: "Коврики и аксессуары", slug: "kovriki", image: "/сcategories/10.png" },
+  { title: "Двигатели", slug: "dvigatel", image: "/сcategories/1.webp" },
+  { title: "Подвеска и ходовая", slug: "podveska", image: "/сcategories/2.webp" },
+  { title: "Кузовные детали", slug: "kuzov", image: "/сcategories/3.webp" },
+  { title: "Электрика", slug: "electrika", image: "/сcategories/4.webp" },
+  { title: "Трансмиссия", slug: "transmissiya", image: "/сcategories/5.webp" },
+  { title: "Расходники", slug: "filtry", image: "/сcategories/6.webp" },
+  { title: "Автооптика", slug: "optika", image: "/сcategories/7.webp" },
+  { title: "Автоинструмент", slug: "instrumenty", image: "/сcategories/8.webp" },
+  { title: "Салон", slug: "salon", image: "/сcategories/9.webp" },
+  { title: "Коврики и аксессуары", slug: "kovriki", image: "/сcategories/10.webp" },
 ];
 
 export const steps = [

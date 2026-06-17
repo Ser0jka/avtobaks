@@ -2,7 +2,7 @@
 
 import type { CSSProperties } from "react";
 import Link from "next/link";
-import partsPhoto from "../../public/сcategories/1.png";
+import partsPhoto from "../../public/сcategories/1.webp";
 import { useCart } from "@/context/CartContext";
 import styles from "@/app/page.module.css";
 

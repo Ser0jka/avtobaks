@@ -7,7 +7,7 @@ import { useSearchParams } from "next/navigation";
 import { products } from "@/data/products";
 import { CATALOG_CATEGORIES, CAR_BRANDS, groupBrandsByLetter } from "@/data/catalog";
 import { CarIcon, SearchIcon, TruckIcon } from "@/components/Icon";
-import MobileMenu from "@/components/MobileMenu";
+import SiteHeader from "@/components/SiteHeader";
 import { useCart } from "@/context/CartContext";
 import styles from "./page.module.css";
 
@@ -25,8 +25,6 @@ const SLUG_TO_CATEGORY: Record<string, string> = {
   aksessuary: "Аксессуары",
   kovriki: "Аксессуары",
 };
-
-const phone = "+7 906 986 66 61";
 
 function CatalogContent() {
   const searchParams = useSearchParams();
@@ -80,26 +78,7 @@ function CatalogContent() {
 
   return (
     <div className={styles.page}>
-      {/* Header */}
-      <header className={styles.header}>
-        <div className={styles.headerInner}>
-          <Link className={styles.logo} href="/">
-            <span>A</span>
-            Автобакс
-          </Link>
-          <nav>
-            <ul className={styles.nav}>
-              <li><Link href="/">Главная</Link></li>
-              <li><Link href="/catalog">Каталог</Link></li>
-              <li><Link href="/#search">Подбор по VIN</Link></li>
-              <li><Link href="/contacts">Контакты</Link></li>
-            </ul>
-          </nav>
-          <a className={styles.phone} href="tel:+79069866661">{phone}</a>
-          <Link className={styles.redButton} href="/#request">Оставить заявку</Link>
-          <MobileMenu />
-        </div>
-      </header>
+      <SiteHeader active="catalog" />
 
       {/* Breadcrumb */}
       <nav className={styles.breadcrumb}>

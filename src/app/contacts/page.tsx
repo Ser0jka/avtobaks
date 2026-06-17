@@ -12,7 +12,7 @@ import {
   VkIcon,
   WhatsAppIcon,
 } from "@/components/Icon";
-import MobileMenu from "@/components/MobileMenu";
+import SiteHeader from "@/components/SiteHeader";
 import styles from "./page.module.css";
 
 const branches = [
@@ -96,26 +96,7 @@ function renderContactIcon(name: string) {
 export default function ContactsPage() {
   return (
     <div className={styles.page}>
-      {/* Header */}
-      <header className={styles.header}>
-        <div className={styles.headerInner}>
-          <Link className={styles.logo} href="/">
-            <span>A</span>
-            Автобакс
-          </Link>
-          <nav>
-            <ul className={styles.nav}>
-              <li><Link href="/">Главная</Link></li>
-              <li><Link href="/catalog">Каталог</Link></li>
-              <li><Link href="/#search">Подбор по VIN</Link></li>
-              <li><Link href="/contacts" className={styles.active}>Контакты</Link></li>
-            </ul>
-          </nav>
-          <a className={styles.phone} href="tel:+79069866661">+7 906 986 66 61</a>
-          <Link className={styles.redButton} href="/#request">Оставить заявку</Link>
-          <MobileMenu />
-        </div>
-      </header>
+      <SiteHeader active="contacts" />
 
       {/* Hero */}
       <div className={styles.hero}>

@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import { TelegramIcon, WhatsAppIcon } from "@/components/Icon";
-import partsPhoto from "../../../public/сcategories/1.png";
+import partsPhoto from "../../../public/сcategories/1.webp";
 import styles from "@/app/page.module.css";
 
 const partsBackgroundStyle = {
