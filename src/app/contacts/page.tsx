@@ -1,7 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment } from "react";
 import Link from "next/link";
+import {
+  ClockIcon,
+  PhoneIcon,
+  PhoneSolidIcon,
+  RouteIcon,
+  StarIcon,
+  TelegramIcon,
+  VkIcon,
+  WhatsAppIcon,
+} from "@/components/Icon";
+import MobileMenu from "@/components/MobileMenu";
 import styles from "./page.module.css";
 
 const branches = [
@@ -21,9 +32,9 @@ const branches = [
       { day: "Воскресенье", time: "Выходной" },
     ],
     messengers: [
-      { label: "WhatsApp", href: "https://wa.me/79230319754", cls: "btnWa", icon: "💬" },
-      { label: "Telegram", href: "https://t.me/avtobaks", cls: "btnTg", icon: "✈️" },
-      { label: "ВКонтакте", href: "https://vk.com/autobaks_shop", cls: "btnVk", icon: "🔵" },
+      { label: "WhatsApp", href: "https://wa.me/79230319754", cls: "btnWa", icon: "whatsapp" },
+      { label: "Telegram", href: "https://t.me/avtobaks", cls: "btnTg", icon: "telegram" },
+      { label: "ВКонтакте", href: "https://vk.com/autobaks_shop", cls: "btnVk", icon: "vk" },
     ],
     rating: "4.6",
     reviews: 24,
@@ -44,9 +55,9 @@ const branches = [
       { day: "Воскресенье", time: "Выходной" },
     ],
     messengers: [
-      { label: "WhatsApp", href: "https://wa.me/79069866671", cls: "btnWa", icon: "💬" },
-      { label: "Telegram", href: "https://t.me/+79069866671", cls: "btnTg", icon: "✈️" },
-      { label: "ВКонтакте", href: "https://vk.com/autobaks_shop", cls: "btnVk", icon: "🔵" },
+      { label: "WhatsApp", href: "https://wa.me/79069866671", cls: "btnWa", icon: "whatsapp" },
+      { label: "Telegram", href: "https://t.me/avtobaks", cls: "btnTg", icon: "telegram" },
+      { label: "ВКонтакте", href: "https://vk.com/autobaks_shop", cls: "btnVk", icon: "vk" },
     ],
     rating: "4.3",
     reviews: 12,
@@ -54,33 +65,35 @@ const branches = [
 ];
 
 const quickContacts = [
-  { label: "Основной телефон", sub: "+7 906 986 66 61", href: "tel:+79069866661", iconCls: "qcPhone", icon: "📞" },
-  { label: "WhatsApp", sub: "Написать сейчас", href: "https://wa.me/79069866661", iconCls: "qcWa", icon: "💬" },
-  { label: "Telegram", sub: "@avtobaks", href: "https://t.me/avtobaks", iconCls: "qcTg", icon: "✈️" },
-  { label: "Viber", sub: "+7 906 986 66 61", href: "viber://chat?number=%2B79069866661", iconCls: "qcViber", icon: "📱" },
+  { label: "Основной телефон", sub: "+7 906 986 66 61", href: "tel:+79069866661", iconCls: "qcPhone", icon: "phoneSolid" },
+  { label: "WhatsApp", sub: "Написать сейчас", href: "https://wa.me/79069866661", iconCls: "qcWa", icon: "whatsapp" },
+  { label: "Telegram", sub: "@avtobaks", href: "https://t.me/avtobaks", iconCls: "qcTg", icon: "telegram" },
 ];
 
+function renderContactIcon(name: string) {
+  switch (name) {
+    case "phone":
+      return <PhoneIcon />;
+    case "phoneSolid":
+      return <PhoneSolidIcon />;
+    case "clock":
+      return <ClockIcon />;
+    case "star":
+      return <StarIcon />;
+    case "route":
+      return <RouteIcon />;
+    case "whatsapp":
+      return <WhatsAppIcon />;
+    case "telegram":
+      return <TelegramIcon />;
+    case "vk":
+      return <VkIcon />;
+    default:
+      return null;
+  }
+}
+
 export default function ContactsPage() {
-  const [form, setForm] = useState({ name: "", phone: "", message: "" });
-  const [sent, setSent] = useState(false);
-  const [sending, setSending] = useState(false);
-
-  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  }
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!form.name || !form.phone) return;
-    setSending(true);
-    // Заглушка — имитация отправки
-    setTimeout(() => {
-      setSending(false);
-      setSent(true);
-      setForm({ name: "", phone: "", message: "" });
-    }, 900);
-  }
-
   return (
     <div className={styles.page}>
       {/* Header */}
@@ -100,6 +113,7 @@ export default function ContactsPage() {
           </nav>
           <a className={styles.phone} href="tel:+79069866661">+7 906 986 66 61</a>
           <Link className={styles.redButton} href="/#request">Оставить заявку</Link>
+          <MobileMenu />
         </div>
       </header>
 
@@ -141,7 +155,9 @@ export default function ContactsPage() {
                 <div className={styles.infoRows}>
                   {/* Phone */}
                   <div className={styles.infoRow}>
-                    <span className={styles.infoIcon}>📞</span>
+                    <span className={`${styles.infoIcon} ${styles.infoIconPhone}`}>
+                      <PhoneIcon />
+                    </span>
                     <div className={styles.infoText}>
                       <span className={styles.infoLabel}>Телефон</span>
                       <a className={styles.infoLink} href={`tel:${b.phoneRaw}`}>{b.phone}</a>
@@ -150,15 +166,17 @@ export default function ContactsPage() {
 
                   {/* Schedule */}
                   <div className={styles.infoRow}>
-                    <span className={styles.infoIcon}>🕐</span>
+                    <span className={`${styles.infoIcon} ${styles.infoIconClock}`}>
+                      <ClockIcon />
+                    </span>
                     <div className={styles.infoText}>
                       <span className={styles.infoLabel}>График работы</span>
                       <div className={styles.schedule}>
                         {b.schedule.map((s) => (
-                          <>
+                          <Fragment key={s.day}>
                             <span key={`d-${s.day}`} className={styles.schDay}>{s.day}</span>
                             <span key={`t-${s.day}`} className={styles.schTime}>{s.time}</span>
-                          </>
+                          </Fragment>
                         ))}
                       </div>
                     </div>
@@ -166,7 +184,9 @@ export default function ContactsPage() {
 
                   {/* Rating */}
                   <div className={styles.infoRow}>
-                    <span className={styles.infoIcon}>⭐</span>
+                    <span className={`${styles.infoIcon} ${styles.infoIconStar}`}>
+                      <StarIcon />
+                    </span>
                     <div className={styles.infoText}>
                       <span className={styles.infoLabel}>Рейтинг на Яндекс Картах</span>
                       <span className={styles.infoValue}>{b.rating} / 5 · {b.reviews} оценок</span>
@@ -184,7 +204,10 @@ export default function ContactsPage() {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      {m.icon} {m.label}
+                      <span className={styles.messengerIcon}>
+                        {renderContactIcon(m.icon)}
+                      </span>
+                      {m.label}
                     </a>
                   ))}
                 </div>
@@ -196,7 +219,8 @@ export default function ContactsPage() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  🗺️ Построить маршрут
+                  <RouteIcon className={styles.inlineIcon} />
+                  Построить маршрут
                 </a>
               </div>
             </div>
@@ -204,7 +228,8 @@ export default function ContactsPage() {
         </div>
 
         {/* Contact form + quick contacts */}
-        <div className={styles.formSection}>
+        <div className={`${styles.formSection} ${styles.contactOnly}`}>
+          {/*
           <div className={styles.formLeft}>
             <h2 className={styles.formTitle}>Написать нам</h2>
             <p className={styles.formDesc}>
@@ -254,6 +279,7 @@ export default function ContactsPage() {
               </form>
             )}
           </div>
+          */}
 
           {/* Quick contacts */}
           <div className={styles.formRight}>
@@ -267,7 +293,7 @@ export default function ContactsPage() {
                 rel={c.href.startsWith("tel") ? undefined : "noopener noreferrer"}
               >
                 <span className={`${styles.qcIcon} ${styles[c.iconCls as keyof typeof styles]}`}>
-                  {c.icon}
+                  {renderContactIcon(c.icon)}
                 </span>
                 <span className={styles.qcLabel}>
                   {c.label}
@@ -278,6 +304,7 @@ export default function ContactsPage() {
           </div>
         </div>
       </div>
+  
     </div>
   );
 }

@@ -8,6 +8,11 @@ export function CartDrawer() {
   const { items, isOpen, closeCart, removeItem, updateQty, clearCart, totalCount, totalPrice } =
     useCart();
 
+  function handleCheckout() {
+    closeCart();
+    window.location.href = "/#request";
+  }
+
   return (
     <>
       {/* Overlay */}
@@ -97,7 +102,7 @@ export function CartDrawer() {
                 {totalPrice.toLocaleString("ru-RU")} ₽
               </span>
             </div>
-            <button className={styles.checkoutBtn}>
+            <button className={styles.checkoutBtn} onClick={handleCheckout}>
               Оформить заявку
             </button>
             <button className={styles.clearBtn} onClick={clearCart}>

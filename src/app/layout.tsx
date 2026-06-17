@@ -1,9 +1,24 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
 import { CartDrawer, CartFloatButton } from "@/components/CartDrawer";
 import FloatContacts from "@/components/FloatContacts";
 import ChatWidget from "@/components/ChatWidget";
+
+const gilroy = localFont({
+  src: [
+    { path: "../font/Gilroy-Regular_0.ttf", weight: "400", style: "normal" },
+    { path: "../font/Gilroy-RegularItalic_0.ttf", weight: "400", style: "italic" },
+    { path: "../font/Gilroy-Medium_0.ttf", weight: "500", style: "normal" },
+    { path: "../font/Gilroy-Semibold_0.ttf", weight: "600", style: "normal" },
+    { path: "../font/Gilroy-Bold_0.ttf", weight: "700", style: "normal" },
+    { path: "../font/Gilroy-Extrabold_0.ttf", weight: "800", style: "normal" },
+    { path: "../font/Gilroy-Black_0.ttf", weight: "900", style: "normal" },
+  ],
+  variable: "--font-gilroy",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Автобакс — автозапчасти в Кемерово",
@@ -17,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru">
+    <html lang="ru" className={gilroy.variable}>
       <body>
         <CartProvider>
           {children}

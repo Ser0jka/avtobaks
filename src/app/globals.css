@@ -21,7 +21,7 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family:
-    Inter, "Segoe UI", Roboto, Arial, Helvetica, sans-serif;
+    var(--font-gilroy), "Segoe UI", Roboto, Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -40,5 +40,9 @@ a {
 button,
 input,
 select {
+  font: inherit;
+}
+
+textarea {
   font: inherit;
 }

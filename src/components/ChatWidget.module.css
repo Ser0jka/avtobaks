@@ -3,29 +3,33 @@
   position: fixed;
   bottom: 2rem;
   right: 6rem;   /* левее кнопки контактов (3.4rem + 2rem + зазор) */
-  z-index: 160;  /* выше FloatContacts (150) */
+  z-index: 260;  /* выше FloatContacts и корзины */
   width: 3.4rem;
   height: 3.4rem;
   border-radius: 50%;
-  background: #11151b;
+  background: linear-gradient(135deg, #e81722, #b90f19);
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 18px rgba(0,0,0,0.32);
+  box-shadow: 0 14px 34px rgba(232, 23, 34, 0.34), 0 4px 18px rgba(0,0,0,0.2);
   transition: background 0.15s, transform 0.2s;
 }
 
 .fab:hover {
-  background: #1e2530;
+  background: linear-gradient(135deg, #f0232e, #c4111c);
   transform: scale(1.07);
 }
 
 .fab svg {
   width: 1.45rem;
   height: 1.45rem;
-  fill: #fff;
+  color: #fff;
+  stroke: currentColor;
+  stroke-width: 2.15;
+  stroke-linecap: round;
+  stroke-linejoin: round;
   transition: transform 0.25s, opacity 0.2s;
 }
 
@@ -74,9 +78,9 @@
   position: fixed;
   bottom: 6rem;
   right: 6rem;
-  z-index: 141;
+  z-index: 255;
   width: 360px;
-  max-height: 520px;
+  max-height: min(520px, calc(100vh - 7.5rem));
   background: #fff;
   border-radius: 16px;
   box-shadow: 0 8px 40px rgba(0,0,0,0.18);
@@ -329,7 +333,15 @@
 }
 .sendBtn:hover:not(:disabled) { background: #c4111c; transform: scale(1.05); }
 .sendBtn:disabled { background: #e3e7ec; cursor: default; }
-.sendBtn svg { width: 1rem; height: 1rem; fill: #fff; }
+.sendBtn svg {
+  width: 1.05rem;
+  height: 1.05rem;
+  color: #fff;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 
 /* Mobile */
 @media (max-width: 480px) {
@@ -337,10 +349,13 @@
     right: 0.75rem;
     left: 0.75rem;
     width: auto;
-    bottom: 9rem;
+    bottom: 8.8rem;
+    max-height: calc(100vh - 9.75rem);
   }
   .fab {
-    right: 1rem;
-    bottom: 5.5rem;
+    right: 4.85rem;
+    bottom: 1rem;
+    width: 3.15rem;
+    height: 3.15rem;
   }
 }

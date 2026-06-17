@@ -7,8 +7,8 @@ export type CatalogCategory = {
 export const CATALOG_CATEGORIES: CatalogCategory[] = [
   { slug: "masla", label: "Масла и тех. жидкости", icon: "🛢️" },
   { slug: "akkumulyatory", label: "Аккумуляторы", icon: "🔋" },
-  { slug: "schetkі", label: "Щётки стеклоочистителя", icon: "🪟" },
-  { slug: "avtolampы", label: "Автолампы", icon: "💡" },
+  { slug: "schetki", label: "Щётки стеклоочистителя", icon: "🪟" },
+  { slug: "avtolampy", label: "Автолампы", icon: "💡" },
   { slug: "himiya", label: "Автохимия и автокосметика", icon: "🧴" },
   { slug: "aksessuary", label: "Аксессуары", icon: "🧰" },
   { slug: "glushiteli", label: "Глушители и комплектующие", icon: "🔧" },

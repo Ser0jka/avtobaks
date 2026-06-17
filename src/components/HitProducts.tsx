@@ -1,51 +1,111 @@
 "use client";
 
-import { useCart } from "@/context/CartContext";
+import type { CSSProperties } from "react";
 import Link from "next/link";
+import partsPhoto from "../../public/сcategories/1.png";
+import { useCart } from "@/context/CartContext";
 import styles from "@/app/page.module.css";
 
 type HitProduct = {
+  id: string;
   title: string;
   article: string;
   price: string;
   priceNum: number;
+  category: string;
   position: string;
-  id: string;
 };
 
 const hitProducts: HitProduct[] = [
-  { id: "1", title: "Тормозные колодки", article: "AB-102354", price: "2 450 ₽", priceNum: 2450, position: "12% 51%" },
-  { id: "2", title: "Масляный фильтр", article: "AB-20456", price: "680 ₽", priceNum: 680, position: "23% 51%" },
-  { id: "3", title: "Моторное масло 5W-40", article: "AB-30567", price: "3 950 ₽", priceNum: 3950, position: "34% 51%" },
-  { id: "4", title: "Фара передняя левая", article: "AB-40678", price: "18 900 ₽", priceNum: 18900, position: "47% 51%" },
-  { id: "5", title: "Стойка амортизатора", article: "AB-50789", price: "4 250 ₽", priceNum: 4250, position: "60% 51%" },
-  { id: "hp6", title: "Коврики EVA комплект", article: "AB-60890", price: "2 990 ₽", priceNum: 2990, position: "72% 51%" },
-  { id: "hp7", title: "Щетки стеклоочистителя", article: "AB-70901", price: "890 ₽", priceNum: 890, position: "83% 51%" },
-  { id: "hp8", title: "Аккумулятор 60Ah", article: "AB-81012", price: "6 450 ₽", priceNum: 6450, position: "94% 51%" },
+  {
+    id: "1",
+    title: "Тормозные колодки",
+    article: "AB-102354",
+    price: "2 450 ₽",
+    priceNum: 2450,
+    category: "Тормозная система",
+    position: "72% 48%",
+  },
+  {
+    id: "2",
+    title: "Масляный фильтр",
+    article: "AB-20456",
+    price: "680 ₽",
+    priceNum: 680,
+    category: "Двигатель и масла",
+    position: "64% 45%",
+  },
+  {
+    id: "3",
+    title: "Моторное масло 5W-40",
+    article: "AB-30567",
+    price: "3 950 ₽",
+    priceNum: 3950,
+    category: "Двигатель и масла",
+    position: "76% 52%",
+  },
+  {
+    id: "4",
+    title: "Фара передняя левая",
+    article: "AB-40678",
+    price: "18 900 ₽",
+    priceNum: 18900,
+    category: "Оптика",
+    position: "70% 42%",
+  },
+  {
+    id: "5",
+    title: "Стойка амортизатора",
+    article: "AB-50789",
+    price: "4 250 ₽",
+    priceNum: 4250,
+    category: "Подвеска",
+    position: "82% 56%",
+  },
+  {
+    id: "hp6",
+    title: "Коврики EVA комплект",
+    article: "AB-60890",
+    price: "2 990 ₽",
+    priceNum: 2990,
+    category: "Аксессуары",
+    position: "58% 50%",
+  },
+  {
+    id: "hp7",
+    title: "Щетки стеклоочистителя",
+    article: "AB-70901",
+    price: "890 ₽",
+    priceNum: 890,
+    category: "Аксессуары",
+    position: "86% 50%",
+  },
+  {
+    id: "hp8",
+    title: "Аккумулятор 60Ah",
+    article: "AB-81012",
+    price: "6 450 ₽",
+    priceNum: 6450,
+    category: "Электрика",
+    position: "78% 58%",
+  },
 ];
-
-function visualStyle(position: string): React.CSSProperties {
-  return {
-    backgroundImage: "url('/avtobaks-reference.png')",
-    backgroundPosition: position,
-  };
-}
 
 export default function HitProducts() {
   const { addItem } = useCart();
 
-  const handleAdd = (p: HitProduct) => {
+  function handleAdd(p: HitProduct) {
     addItem({
       id: p.id,
       title: p.title,
       article: p.article,
       price: p.priceNum,
-      category: "Разное",
+      category: p.category,
       inStock: true,
-      image: `https://placehold.co/300x220/1a1a1a/ffffff?text=${encodeURIComponent(p.title)}`,
+      image: partsPhoto,
       description: "",
     });
-  };
+  }
 
   return (
     <>
@@ -56,17 +116,25 @@ export default function HitProducts() {
       <div className={styles.productGrid}>
         {hitProducts.map((p) => (
           <article className={styles.productCard} key={p.article}>
-            <div className={styles.productImage} style={visualStyle(p.position)} />
-            <h3>{p.title}</h3>
-            <p>Артикул: {p.article}</p>
-            <span>В наличии</span>
-            <strong>{p.price}</strong>
+            <div
+              className={styles.productImage}
+              style={{
+                "--product-photo": `url(${partsPhoto.src})`,
+                "--product-position": p.position,
+              } as CSSProperties}
+            >
+              <span aria-hidden="true" />
+            </div>
+            <div className={styles.productInfo}>
+              <p className={styles.productCategory}>{p.category}</p>
+              <h3>{p.title}</h3>
+              <p>Артикул: {p.article}</p>
+              <span>В наличии</span>
+              <strong>{p.price}</strong>
+            </div>
             <div className={styles.productActions}>
               <Link href="/catalog">Подробнее</Link>
-              <button
-                className={styles.cartBtn}
-                onClick={() => handleAdd(p)}
-              >
+              <button className={styles.cartBtn} onClick={() => handleAdd(p)}>
                 В корзину
               </button>
             </div>

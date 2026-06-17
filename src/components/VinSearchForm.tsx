@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { products } from "@/data/products";
 import { useCart } from "@/context/CartContext";
@@ -140,7 +141,7 @@ export default function VinSearchForm() {
       <aside className={styles.helpBox}>
         <strong>Не знаете артикул?</strong>
         <p>Покажем подобрать нужную деталь вручную</p>
-        <a href="#request" className={styles.helpLink}>Оставить заявку</a>
+        <Link href="/#request" className={styles.helpLink}>Оставить заявку</Link>
       </aside>
 
       {/* Results */}
@@ -157,7 +158,7 @@ export default function VinSearchForm() {
           <p className={styles.emptyTitle}>Ничего не найдено</p>
           <p className={styles.emptyText}>
             Попробуйте изменить параметры поиска или{" "}
-            <a href="#request">оставьте заявку</a> — мы подберём деталь вручную.
+            <Link href="/#request">оставьте заявку</Link> — мы подберём деталь вручную.
           </p>
           <button className={styles.resetBtn} onClick={handleReset}>
             Сбросить поиск
@@ -187,7 +188,13 @@ export default function VinSearchForm() {
             {results.map((p) => (
               <article className={styles.card} key={p.id}>
                 <div className={styles.cardImg}>
-                  <img src={p.image} alt={p.title} />
+                  <Image
+                    src={p.image}
+                    alt={p.title}
+                    fill
+                    sizes="(max-width: 640px) 100vw, 220px"
+                    unoptimized
+                  />
                   <span className={`${styles.badge} ${p.inStock ? styles.inStock : styles.outOfStock}`}>
                     {p.inStock ? "В наличии" : "Под заказ"}
                   </span>
@@ -209,7 +216,7 @@ export default function VinSearchForm() {
 
           <div className={styles.resultsCta}>
             <p>Не нашли нужную деталь? Оставьте заявку и мы подберём вручную.</p>
-            <a href="#request" className={styles.ctaBtn}>Оставить заявку</a>
+            <Link href="/#request" className={styles.ctaBtn}>Оставить заявку</Link>
           </div>
         </div>
       )}

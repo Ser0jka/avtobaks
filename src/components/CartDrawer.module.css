@@ -305,3 +305,35 @@
   60%  { transform: scale(1.15); }
   100% { transform: scale(1); }
 }
+
+@media (max-width: 640px) {
+  .drawer {
+    width: 100vw;
+  }
+
+  .drawerHeader,
+  .items,
+  .drawerFooter {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .item {
+    grid-template-columns: 64px 1fr auto;
+    gap: 0.65rem;
+  }
+
+  .itemImage {
+    width: 64px;
+    height: 52px;
+  }
+
+  .cartFloat {
+    right: auto;
+    left: 1rem;
+    bottom: 1rem;
+    max-width: calc(100vw - 8.5rem);
+    padding: 0.7rem 0.95rem;
+    font-size: 0.82rem;
+  }
+}

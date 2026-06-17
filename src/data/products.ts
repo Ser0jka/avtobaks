@@ -1,3 +1,6 @@
+import type { StaticImageData } from "next/image";
+import partsPhoto from "../../public/сcategories/1.png";
+
 export type Product = {
   id: string;
   title: string;
@@ -5,7 +8,7 @@ export type Product = {
   price: number;
   category: string;
   inStock: boolean;
-  image: string;
+  image: string | StaticImageData;
   description: string;
 };
 
@@ -26,7 +29,7 @@ export const products: Product[] = [
     price: 2450,
     category: "Тормозная система",
     inStock: true,
-    image: "https://placehold.co/300x220/1a1a1a/ffffff?text=Колодки",
+    image: partsPhoto,
     description:
       "Передние тормозные колодки, совместимы с Toyota, Nissan, Mazda. Срок службы — от 40 000 км.",
   },
@@ -37,7 +40,7 @@ export const products: Product[] = [
     price: 680,
     category: "Двигатель и масла",
     inStock: true,
-    image: "https://placehold.co/300x220/1a1a1a/ffffff?text=Фильтр",
+    image: partsPhoto,
     description:
       "Масляный фильтр для иномарок. Высокая степень очистки, ресурс до 15 000 км.",
   },
@@ -48,7 +51,7 @@ export const products: Product[] = [
     price: 3950,
     category: "Двигатель и масла",
     inStock: true,
-    image: "https://placehold.co/300x220/1a1a1a/ffffff?text=Масло+5W-40",
+    image: partsPhoto,
     description:
       "Синтетическое моторное масло 5W-40. Объём 4 литра. Подходит для бензиновых и дизельных двигателей.",
   },
@@ -59,7 +62,7 @@ export const products: Product[] = [
     price: 18900,
     category: "Оптика",
     inStock: false,
-    image: "https://placehold.co/300x220/1a1a1a/ffffff?text=Фара",
+    image: partsPhoto,
     description:
       "Передняя левая фара. Под заказ, срок поставки 3–5 рабочих дней.",
   },
@@ -70,7 +73,7 @@ export const products: Product[] = [
     price: 4250,
     category: "Подвеска",
     inStock: true,
-    image: "https://placehold.co/300x220/1a1a1a/ffffff?text=Амортизатор",
+    image: partsPhoto,
     description:
       "Стойка амортизатора передней подвески. Газомасляная, усиленная. Совместимость уточняйте по VIN.",
   },

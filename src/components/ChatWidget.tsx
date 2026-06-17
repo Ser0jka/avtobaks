@@ -7,6 +7,7 @@ import {
   useCallback,
   type KeyboardEvent,
 } from "react";
+import { MessageCircleIcon, SendIcon, XIcon } from "@/components/Icon";
 import styles from "./ChatWidget.module.css";
 
 type Role = "user" | "bot";
@@ -57,7 +58,6 @@ export default function ChatWidget() {
   // Focus input when opened
   useEffect(() => {
     if (open) {
-      setHasUnread(false);
       setTimeout(() => inputRef.current?.focus(), 150);
     }
   }, [open]);
@@ -92,7 +92,9 @@ export default function ChatWidget() {
         body: JSON.stringify({ messages: history }),
       });
 
-      const data = await res.json();
+      const data = (await res.json().catch(() => ({
+        error: "Сервер чата вернул некорректный ответ. Попробуйте позже.",
+      }))) as { reply?: string; error?: string };
 
       if (!res.ok || data.error) {
         setMessages((prev) => [
@@ -110,7 +112,7 @@ export default function ChatWidget() {
           {
             id: uid(),
             role: "bot",
-            text: data.reply,
+            text: data.reply ?? "Не смог сформулировать ответ. Попробуйте ещё раз.",
             time: formatTime(new Date()),
           },
         ]);
@@ -143,6 +145,11 @@ export default function ChatWidget() {
 
   const showQuickReplies =
     messages.length === 1 && messages[0].id === "greeting";
+
+  function toggleChat() {
+    if (!open) setHasUnread(false);
+    setOpen((current) => !current);
+  }
 
   return (
     <>
@@ -223,9 +230,7 @@ export default function ChatWidget() {
               disabled={!input.trim() || loading}
               aria-label="Отправить"
             >
-              <svg viewBox="0 0 24 24">
-                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
-              </svg>
+              <SendIcon />
             </button>
           </div>
         </div>
@@ -234,18 +239,12 @@ export default function ChatWidget() {
       {/* FAB */}
       <button
         className={`${styles.fab} ${open ? styles.open : ""}`}
-        onClick={() => setOpen((v) => !v)}
+        onClick={toggleChat}
         aria-label={open ? "Закрыть чат" : "Открыть чат с помощником"}
         aria-expanded={open}
       >
-        {/* Chat icon */}
-        <svg className={styles.fabIcon} viewBox="0 0 24 24">
-          <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z" />
-        </svg>
-        {/* Close icon */}
-        <svg className={styles.fabClose} viewBox="0 0 24 24">
-          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
-        </svg>
+        <MessageCircleIcon className={styles.fabIcon} />
+        <XIcon className={styles.fabClose} />
 
         {!open && hasUnread && <span className={styles.badge}>1</span>}
       </button>

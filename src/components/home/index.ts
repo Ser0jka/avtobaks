@@ -1,0 +1,12 @@
+export { default as AdvantagesSection } from "./AdvantagesSection";
+export { default as CategorySection } from "./CategorySection";
+export { default as DromSection } from "./DromSection";
+export { default as FactsStrip } from "./FactsStrip";
+export { default as HomeFooter } from "./HomeFooter";
+export { default as HomeHeader } from "./HomeHeader";
+export { default as HomeHero } from "./HomeHero";
+export { default as QuickSearchSection } from "./QuickSearchSection";
+export { default as RequestCta } from "./RequestCta";
+export { default as ReviewsSection } from "./ReviewsSection";
+export { default as SuppliersSection } from "./SuppliersSection";
+export { default as StepsSection } from "./StepsSection";

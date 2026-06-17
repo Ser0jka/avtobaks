@@ -1,13 +1,17 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { Suspense, useMemo, useState, type FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { products } from "@/data/products";
 import { CATALOG_CATEGORIES, CAR_BRANDS, groupBrandsByLetter } from "@/data/catalog";
+import { CarIcon, SearchIcon, TruckIcon } from "@/components/Icon";
+import MobileMenu from "@/components/MobileMenu";
 import { useCart } from "@/context/CartContext";
 import styles from "./page.module.css";
+
+const POPULAR_BRANDS = ["Toyota", "Volkswagen", "BMW", "Audi", "Mercedes-Benz", "Kia", "Hyundai", "Nissan", "Ford", "Renault"];
 
 // Map catalog slug → product category string
 const SLUG_TO_CATEGORY: Record<string, string> = {
@@ -16,7 +20,7 @@ const SLUG_TO_CATEGORY: Record<string, string> = {
   masla: "Двигатель и масла",
   filtry: "Двигатель и масла",
   optika: "Оптика",
-  avtolampы: "Оптика",
+  avtolampy: "Оптика",
   podveska: "Подвеска",
   aksessuary: "Аксессуары",
   kovriki: "Аксессуары",
@@ -24,14 +28,18 @@ const SLUG_TO_CATEGORY: Record<string, string> = {
 
 const phone = "+7 906 986 66 61";
 
-export default function CatalogPage() {
+function CatalogContent() {
   const searchParams = useSearchParams();
   const initialSlug = searchParams.get("category") ?? "";
+  const initialBrand = searchParams.get("brand") ?? "";
+  const initialQuery = searchParams.get("q") ?? "";
 
   const [activeSlug, setActiveSlug] = useState(initialSlug);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [brandTab, setBrandTab] = useState<"passenger" | "truck">("passenger");
-  const [brandSearch, setBrandSearch] = useState("");
+  const [brandSearch, setBrandSearch] = useState(initialBrand);
   const [vinValue, setVinValue] = useState("");
+  const [vinSubmitted, setVinSubmitted] = useState(false);
 
   const { addItem } = useCart();
 
@@ -44,11 +52,31 @@ export default function CatalogPage() {
   }, [brandSearch]);
 
   const productCategory = activeSlug ? (SLUG_TO_CATEGORY[activeSlug] ?? "") : "";
-  const filteredProducts = productCategory
-    ? products.filter((p) => p.category === productCategory)
+  const categoryProducts = activeSlug
+    ? products.filter((p) => productCategory && p.category === productCategory)
     : products;
+  const productQuery = initialQuery.trim().toLowerCase();
+  const filteredProducts = productQuery
+    ? categoryProducts.filter((p) =>
+        [p.title, p.article, p.category, p.description]
+          .join(" ")
+          .toLowerCase()
+          .includes(productQuery),
+      )
+    : categoryProducts;
 
   const activeCategory = CATALOG_CATEGORIES.find((c) => c.slug === activeSlug);
+  const productsTitle = productQuery
+    ? `Поиск: ${initialQuery.trim()}`
+    : activeCategory
+      ? activeCategory.label
+      : "Все товары";
+
+  function handleVinSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!vinValue.trim()) return;
+    setVinSubmitted(true);
+  }
 
   return (
     <div className={styles.page}>
@@ -64,11 +92,12 @@ export default function CatalogPage() {
               <li><Link href="/">Главная</Link></li>
               <li><Link href="/catalog">Каталог</Link></li>
               <li><Link href="/#search">Подбор по VIN</Link></li>
-              <li><Link href="/#контакты">Контакты</Link></li>
+              <li><Link href="/contacts">Контакты</Link></li>
             </ul>
           </nav>
           <a className={styles.phone} href="tel:+79069866661">{phone}</a>
           <Link className={styles.redButton} href="/#request">Оставить заявку</Link>
+          <MobileMenu />
         </div>
       </header>
 
@@ -87,8 +116,35 @@ export default function CatalogPage() {
 
       {/* Layout */}
       <div className={styles.layout}>
+        {/* ── Mobile sidebar toggle ── */}
+        <div className={styles.mobileSidebarToggle}>
+          <button
+            className={styles.mobileSidebarBtn}
+            onClick={() => setMobileSidebarOpen((v) => !v)}
+          >
+            <span className={styles.mobileSidebarIcon}>
+              {mobileSidebarOpen ? "✕" : "☰"}
+            </span>
+            {activeSlug
+              ? (CATALOG_CATEGORIES.find((c) => c.slug === activeSlug)?.label ?? "Категории")
+              : "Выбрать категорию"}
+            {activeSlug && <span className={styles.activeFilterDot} />}
+          </button>
+          {activeSlug && (
+            <button
+              className={styles.clearFilterBtn}
+              onClick={() => {
+                setActiveSlug("");
+                setMobileSidebarOpen(false);
+              }}
+            >
+              Сбросить ✕
+            </button>
+          )}
+        </div>
+
         {/* ── Left sidebar ── */}
-        <aside className={styles.sidebar}>
+        <aside className={`${styles.sidebar} ${mobileSidebarOpen ? styles.sidebarMobileOpen : ""}`}>
           {/* VIN mini-block */}
           <div className={styles.sidebarVin}>
             <p className={styles.sidebarVinTitle}>Оригинальные каталоги</p>
@@ -107,7 +163,10 @@ export default function CatalogPage() {
               <li key={cat.slug} className={styles.catItem}>
                 <button
                   className={`${styles.catBtn} ${activeSlug === cat.slug ? styles.active : ""}`}
-                  onClick={() => setActiveSlug(activeSlug === cat.slug ? "" : cat.slug)}
+                  onClick={() => {
+                    setActiveSlug(activeSlug === cat.slug ? "" : cat.slug);
+                    setMobileSidebarOpen(false);
+                  }}
                 >
                   <span className={styles.catIcon}>{cat.icon}</span>
                   {cat.label}
@@ -126,40 +185,65 @@ export default function CatalogPage() {
               <p className={styles.vinBlockDesc}>
                 Введите VIN-номер или номер кузова, чтобы найти подходящие запчасти
               </p>
-              <div className={styles.vinForm}>
+              <form className={styles.vinForm} onSubmit={handleVinSubmit}>
                 <input
                   className={styles.vinInput}
                   placeholder="Введите VIN · Frame"
                   value={vinValue}
-                  onChange={(e) => setVinValue(e.target.value)}
+                  onChange={(e) => {
+                    setVinValue(e.target.value);
+                    setVinSubmitted(false);
+                  }}
                 />
-                <button className={styles.vinSubmit}>Найти запчасти</button>
-              </div>
+                <button className={styles.vinSubmit} type="submit">Найти запчасти</button>
+              </form>
               <div className={styles.vinExamples}>
                 <span>Пример VIN: <span>WAUZZZ4M0HD042149</span></span>
                 <span>Пример кузова: <span>SGL5-400683</span></span>
               </div>
+              {vinSubmitted && (
+                <p className={styles.vinNotice}>
+                  VIN принят. Для точного подбора оставьте заявку, и менеджер проверит совместимость детали.
+                </p>
+              )}
             </div>
             <div className={styles.vinIllustration} aria-hidden="true">⚙️</div>
           </div>
 
           {/* Brand search */}
           <div className={styles.brandBlock} id="brands">
+            {/* Popular brands quick chips */}
+            <div className={styles.popularBrands}>
+              <span className={styles.popularBrandsLabel}>Популярные:</span>
+              {POPULAR_BRANDS.map((name) => (
+                <a
+                  key={name}
+                  href={`/catalog?brand=${encodeURIComponent(name)}`}
+                  className={`${styles.brandChip} ${brandSearch === name ? styles.brandChipActive : ""}`}
+                  onClick={() => setBrandSearch(name)}
+                >
+                  {name}
+                </a>
+              ))}
+            </div>
+
             <div className={styles.brandTabs}>
               <button
                 className={`${styles.brandTab} ${brandTab === "passenger" ? styles.active : ""}`}
                 onClick={() => setBrandTab("passenger")}
               >
-                🚗 Легковые
+                <CarIcon />
+                Легковые
               </button>
               <button
                 className={`${styles.brandTab} ${brandTab === "truck" ? styles.active : ""}`}
                 onClick={() => setBrandTab("truck")}
               >
-                🚛 Грузовые
+                <TruckIcon />
+                Грузовые
               </button>
               <div className={styles.brandSearch}>
-                <span style={{ color: "#66717e" }}>🔍</span>
+                <SearchIcon className={styles.brandSearchIcon} />
                 <input
                   className={styles.brandSearchInput}
                   placeholder="Искать в списке"
@@ -191,7 +275,7 @@ export default function CatalogPage() {
           <div className={styles.productsSection}>
             <div className={styles.productsSectionTitle}>
               <span>
-                {activeCategory ? activeCategory.label : "Все товары"}
+                {productsTitle}
               </span>
               <span className={styles.productsSectionCount}>
                 {filteredProducts.length} позиц.
@@ -251,5 +335,13 @@ export default function CatalogPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CatalogPage() {
+  return (
+    <Suspense fallback={<div className={styles.page} />}>
+      <CatalogContent />
+    </Suspense>
   );
 }

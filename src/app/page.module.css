@@ -8,15 +8,13 @@
 
   min-height: 100vh;
   color: var(--ink);
-  background:
-    radial-gradient(circle at 18% 9%, rgba(232, 23, 34, 0.08), transparent 20rem),
-    linear-gradient(180deg, #f8fafc 0, #ffffff 34rem);
+  background: #f8fafc;
 }
 
 .hero {
   position: relative;
   overflow: hidden;
-  min-height: 34rem;
+  min-height: auto;
   color: #fff;
   background: #05090d;
 }
@@ -24,6 +22,7 @@
 .hero::after {
   position: absolute;
   inset: 0;
+  z-index: 1;
   content: "";
   pointer-events: none;
   background:
@@ -31,24 +30,33 @@
     linear-gradient(180deg, rgba(5, 9, 13, 0.16), #05090d 100%);
 }
 
-.header,
 .heroInner,
 .section,
 .cta,
 .footer {
-  width: min(100% - 2rem, 1320px);
+  width: calc(100% - 2rem);
+  max-width: 1320px;
   margin: 0 auto;
 }
 
+.siteHeader {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #05090d;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 2px 24px rgba(0, 0, 0, 0.45);
+}
+
 .header {
-  position: relative;
-  z-index: 4;
   display: grid;
-  grid-template-columns: auto 1fr minmax(14rem, 22rem) auto auto;
+  grid-template-columns: auto 1fr minmax(14rem, 22rem) auto auto auto;
   align-items: center;
   gap: 1rem;
   min-height: 4.25rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  width: calc(100% - 2rem);
+  max-width: 1320px;
+  margin: 0 auto;
 }
 
 .logo {
@@ -59,6 +67,10 @@
   font-weight: 800;
   letter-spacing: 0;
   white-space: nowrap;
+}
+
+.siteHeader .logo {
+  color: #fff;
 }
 
 .logo span {
@@ -78,6 +90,11 @@
   gap: clamp(0.55rem, 1.2vw, 1.5rem);
   color: rgba(255, 255, 255, 0.82);
   font-size: 0.88rem;
+  scrollbar-width: none;
+}
+
+.nav::-webkit-scrollbar {
+  display: none;
 }
 
 .nav a,
@@ -102,17 +119,15 @@
   background: rgba(255, 255, 255, 0.04);
 }
 
-.search span {
-  font-size: 0.01rem;
-}
-
-.search::before {
-  width: 0.82rem;
-  height: 0.82rem;
-  content: "";
-  border: 2px solid currentColor;
-  border-radius: 999px;
-  box-shadow: 0.45rem 0.45rem 0 -0.32rem currentColor;
+.searchIcon {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex: 0 0 auto;
+  color: rgba(255, 255, 255, 0.62);
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .search input {
@@ -130,6 +145,7 @@
 }
 
 .phone {
+  color: #fff;
   font-weight: 800;
   white-space: nowrap;
 }
@@ -164,15 +180,44 @@
   transform: translateY(-2px);
 }
 
+.socialButton {
+  gap: 0.55rem;
+}
+
+.socialIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 999px;
+  color: #fff;
+  flex: 0 0 auto;
+}
+
+.socialIcon svg {
+  width: 1rem;
+  height: 1rem;
+  color: currentColor;
+}
+
+.socialWa {
+  background: #25d366;
+}
+
+.socialTg {
+  background: #2AABEE;
+}
+
 .heroInner {
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-columns: minmax(20rem, 36rem) 1fr;
+  grid-template-columns: minmax(20rem, 40rem) 1fr;
   align-items: center;
   gap: 3rem;
-  min-height: 29rem;
-  padding: 3.5rem 0 4.5rem;
+  min-height: 32rem;
+  padding: 4rem 0 6rem;
 }
 
 .heroCopy {
@@ -212,26 +257,26 @@
 
 .heroImage {
   position: absolute;
-  inset: 0 0 0 38%;
-  z-index: -1;
-  opacity: 0.9;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.92;
 }
 
 .heroImage img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 70% 0%;
+  object-position: center top;
   filter: saturate(0.95) contrast(1.08);
 }
 
 .facts {
   position: relative;
-  z-index: 5;
+  z-index: 2;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 1rem;
-  margin-top: -2.1rem;
+  margin-top: -3rem;
 }
 
 .factCard,
@@ -251,10 +296,10 @@
 .factCard {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 0.15rem 0.75rem;
-  min-height: 4.9rem;
+  gap: 0.2rem 0.8rem;
+  min-height: 4.5rem;
   align-content: center;
-  padding: 1rem;
+  padding: 1rem 1.1rem;
 }
 
 .factIcon,
@@ -263,6 +308,22 @@
   width: 2.1rem;
   height: 2.1rem;
   border-radius: 0.42rem;
+}
+
+.factIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    linear-gradient(135deg, rgba(232, 23, 34, 0.14), rgba(17, 21, 27, 0.04));
+  color: var(--red);
+  font-size: 0.72rem;
+  font-weight: 900;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.advantageCard span {
   background:
     linear-gradient(135deg, rgba(232, 23, 34, 0.16), rgba(17, 21, 27, 0.05)),
     linear-gradient(var(--red), var(--red)) center / 0.9rem 0.16rem no-repeat,
@@ -270,7 +331,14 @@
 }
 
 .factCard strong {
-  font-size: 1rem;
+  font-size: 1.05rem;
+  line-height: 1.15;
+}
+
+.factCard p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.35;
 }
 
 .factCard p,
@@ -284,7 +352,7 @@
 }
 
 .section {
-  padding: 1.45rem 0;
+  padding: clamp(2rem, 4vw, 3.25rem) 0;
 }
 
 .section h2,
@@ -302,7 +370,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.35rem;
 }
 
 .sectionHead a {
@@ -312,11 +380,20 @@
 
 .quickSearch {
   display: grid;
-  grid-template-columns: minmax(13rem, 20rem) 1fr minmax(12rem, 18rem);
-  gap: 1rem;
-  align-items: end;
+  grid-template-columns: minmax(16rem, 21rem) minmax(0, 1fr);
+  gap: clamp(1.5rem, 3vw, 3.25rem);
+  align-items: start;
   margin-top: 1.15rem;
-  padding: 1.25rem;
+  padding: clamp(1.35rem, 2.4vw, 2rem);
+}
+
+.quickSearch > div:first-child {
+  align-self: start;
+  padding-top: 0.4rem;
+}
+
+.quickSearch > * {
+  min-width: 0;
 }
 
 .searchForm {
@@ -370,10 +447,11 @@
 .categoryCard {
   position: relative;
   overflow: hidden;
-  min-height: 7.2rem;
+  min-height: 9rem;
   border-radius: 0.55rem;
   background-color: #121820;
-  background-size: 1180px auto;
+  background-position: center;
+  background-size: cover;
   box-shadow: inset 0 -4.5rem 4rem rgba(0, 0, 0, 0.72);
   transition: transform 180ms ease, box-shadow 180ms ease;
 }
@@ -383,7 +461,7 @@
   position: absolute;
   inset: 0;
   content: "";
-  background: linear-gradient(180deg, rgba(7, 11, 15, 0.04), rgba(7, 11, 15, 0.72));
+  background: linear-gradient(180deg, rgba(7, 11, 15, 0.04), rgba(7, 11, 15, 0.42));
 }
 
 .categoryCard span {
@@ -393,7 +471,7 @@
   right: 0.85rem;
   bottom: 0.85rem;
   color: #fff;
-  font-weight: 900;
+  font-weight: 600;
 }
 
 .categoryCard:hover,
@@ -445,60 +523,98 @@
 
 .productGrid {
   display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  gap: 0.85rem;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1.25rem;
 }
 
 .productCard {
-  display: grid;
-  gap: 0.45rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
   min-width: 0;
-  padding: 0.75rem;
+  padding: 0.9rem;
+  border-radius: 0.7rem;
   transition: transform 180ms ease, box-shadow 180ms ease;
 }
 
 .productImage {
   position: relative;
   overflow: hidden;
-  aspect-ratio: 1.2;
-  border-radius: 0.45rem;
-  background-color: #eef1f5;
-  background-size: 1180px auto;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 10;
+  border-radius: 0.55rem;
+  background:
+    linear-gradient(180deg, rgba(5, 9, 13, 0.02), rgba(5, 9, 13, 0.52)),
+    var(--product-photo);
+  background-size: cover;
+  background-position: var(--product-position, center);
+}
+
+.productImage::after {
+  display: none;
+}
+
+.productImage span {
+  display: none;
+  color: #1b222b;
+  filter: drop-shadow(0 0.9rem 0.9rem rgba(17, 21, 27, 0.18));
+}
+
+.productImage span::before,
+.productImage span::after {
+  position: absolute;
+  content: "";
 }
 
 .productCard h3 {
-  min-height: 2.4rem;
-  font-size: 0.94rem;
+  min-height: 2.75rem;
+  font-size: 1.08rem;
   line-height: 1.25;
 }
 
 .productCard p {
-  font-size: 0.78rem;
+  font-size: 0.88rem;
 }
 
-.productCard span {
+.productInfo > span {
   color: #1d9b5f;
-  font-size: 0.82rem;
+  font-size: 0.88rem;
   font-weight: 800;
 }
 
-.productCard > strong {
-  font-size: 1.14rem;
+.productInfo > strong {
+  font-size: 1.3rem;
+}
+
+.productInfo {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.productCategory {
+  color: var(--red) !important;
+  font-size: 0.76rem !important;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .productActions {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.35rem;
-  margin-top: 0.25rem;
+  gap: 0.65rem;
+  margin-top: auto;
 }
 
 .productActions a {
-  display: grid;
-  place-items: center;
-  min-height: 2rem;
-  border-radius: 0.32rem;
-  font-size: 0.76rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.45rem;
+  padding: 0 0.8rem;
+  border-radius: 0.45rem;
+  font-size: 0.86rem;
   font-weight: 800;
 }
 
@@ -506,17 +622,14 @@
   border: 1px solid var(--line);
 }
 
-.productActions a:last-child {
-  color: #fff;
-  background: var(--red);
-}
-
 .cartBtn {
-  display: grid;
-  place-items: center;
-  min-height: 2rem;
-  border-radius: 0.32rem;
-  font-size: 0.76rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.45rem;
+  padding: 0 0.8rem;
+  border-radius: 0.45rem;
+  font-size: 0.86rem;
   font-weight: 800;
   color: #fff;
   background: var(--red);
@@ -543,7 +656,7 @@
   border-radius: 0.55rem;
   background:
     linear-gradient(135deg, rgba(7, 11, 15, 0.96), rgba(20, 30, 40, 0.86)),
-    url("/avtobaks-reference.png") center 57% / 1080px auto;
+    var(--parts-photo) center / cover;
   box-shadow: 0 1.25rem 3rem rgba(17, 21, 27, 0.12);
 }
 
@@ -567,30 +680,36 @@
 
 .dromBlock {
   display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 2rem;
+  grid-template-columns: auto 1fr;
+  gap: 1.35rem;
   align-items: center;
-  padding: 1.6rem;
+  padding: 1.45rem;
 }
 
 .dromBlock p {
-  max-width: 54rem;
-  margin: 0.8rem 0 1.2rem;
-  line-height: 1.55;
+  max-width: 44rem;
+  margin: 0.65rem 0 1rem;
+  line-height: 1.5;
+}
+
+.dromContent {
+  min-width: 0;
 }
 
 .dromLogo {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  color: #111;
-  font-size: clamp(2.2rem, 5vw, 4.8rem);
+  gap: 0.62rem;
+  color: #000000;
+  font-size: clamp(2rem, 4vw, 3.4rem);
   font-weight: 900;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .dromLogo::before {
-  width: 3rem;
-  height: 3rem;
+  width: 2.55rem;
+  height: 2.55rem;
   content: "";
   border-radius: 999px;
   background: var(--red);
@@ -598,8 +717,8 @@
 
 .advantageGrid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 1rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
   margin-top: 1rem;
 }
 
@@ -618,7 +737,7 @@
 .reviewGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .reviewCard {
@@ -661,7 +780,7 @@
   border-radius: 0.55rem;
   background:
     linear-gradient(90deg, rgba(5, 9, 13, 0.96), rgba(5, 9, 13, 0.78)),
-    url("/avtobaks-reference.png") center 83% / 1240px auto;
+    var(--parts-photo) center / cover;
 }
 
 .cta p {
@@ -683,7 +802,9 @@
   display: grid;
   grid-template-columns: 1.4fr 1fr 1fr;
   gap: 2rem;
-  padding: 2rem 0 2.8rem;
+  padding: 2.2rem 0 3rem;
+  border-top: 1px solid var(--line);
+  margin-top: 1.5rem;
 }
 
 .footer > div {
@@ -705,35 +826,17 @@
   font-size: 0.95rem;
 }
 
+/* ── 1180px: исправления сеток ─────────────────────────────────── */
 @media (max-width: 1180px) {
-  .header {
-    grid-template-columns: auto 1fr auto;
-  }
-
-  .nav {
-    order: 3;
-    grid-column: 1 / -1;
-    padding-bottom: 0.9rem;
-    overflow-x: auto;
-  }
-
-  .search {
-    display: none;
-  }
-
-  .facts,
-  .categoryGrid,
-  .stepGrid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+  /* facts (5), categoryGrid (10) and stepGrid (5) keep their columns
+     down to 1024px — they fit fine at this viewport */
 
   .productGrid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   }
 
-  .advantageGrid,
   .reviewGrid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .quickSearch {
@@ -741,28 +844,64 @@
   }
 }
 
+/* ── 1024px (cont.) — narrow 5-column grids to 3 cols ───────────── */
+@media (max-width: 1024px) {
+  .facts {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .categoryGrid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  .stepGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ── 1024px: планшет — убираем nav и поиск, показываем burger ──── */
+@media (max-width: 1024px) {
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    min-height: 4.25rem;
+  }
+
+  .logo {
+    margin-right: auto;
+  }
+
+  .nav,
+  .search {
+    display: none;
+  }
+
+  .phone {
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+}
+
+/* ── 760px: мобильный телефон ─────────────────────────────────── */
 @media (max-width: 760px) {
-  .header,
   .heroInner,
   .section,
   .cta,
   .footer {
-    width: min(100% - 1rem, 1320px);
+    width: calc(100% - 1rem);
   }
 
   .header {
-    grid-template-columns: 1fr auto;
-    gap: 0.75rem;
+    width: calc(100% - 1rem);
+    padding: 0.55rem 0;
+    gap: 0.6rem;
   }
 
-  .phone {
+  /* Скрываем телефон и кнопку — остаётся только logo + burger */
+  .phone,
+  .headerCta {
     display: none;
-  }
-
-  .header > .redButton {
-    min-height: 2.35rem;
-    padding: 0 0.8rem;
-    font-size: 0.82rem;
   }
 
   .hero {
@@ -771,31 +910,58 @@
 
   .heroInner {
     grid-template-columns: 1fr;
-    min-height: 34rem;
-    padding: 2rem 0 4rem;
+    min-height: 30rem;
+    padding: 1.8rem 0 3.8rem;
   }
 
   .heroImage {
-    inset: 0;
-    opacity: 0.45;
+    opacity: 0.4;
   }
 
   .hero h1 {
-    max-width: 11ch;
-    font-size: clamp(2.35rem, 12vw, 4rem);
+    max-width: 13ch;
+    font-size: clamp(2.1rem, 9.5vw, 3.5rem);
   }
 
   .heroCopy > p:not(.eyebrow) {
     font-size: 1rem;
   }
 
-  .facts,
-  .categoryGrid,
-  .stepGrid,
+  .heroActions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  /* 2 колонки для компактных блоков */
+  .facts {
+    grid-template-columns: repeat(2, 1fr);
+    margin-top: -1rem;
+    gap: 0.6rem;
+  }
+
+  .categoryGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+  }
+
+  .stepGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+  }
+
+  .advantageGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+  }
+
+  .reviewGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+  }
+
+  /* 1 колонка для широких блоков */
   .productGrid,
   .supplierGrid,
-  .advantageGrid,
-  .reviewGrid,
   .footer,
   .splitBand,
   .dromBlock,
@@ -803,16 +969,45 @@
     grid-template-columns: 1fr;
   }
 
-  .facts {
-    margin-top: -1.2rem;
-  }
-
   .section {
-    padding: 1rem 0;
+    padding: 1.2rem 0;
   }
 
   .quickSearch {
     padding: 1rem;
+    margin-top: 0.75rem;
+  }
+
+  .quickSearch h2 {
+    font-size: clamp(1.5rem, 7vw, 2rem);
+    overflow-wrap: anywhere;
+  }
+
+  .dromBlock {
+    gap: 0.9rem;
+    align-items: start;
+    padding: 1.1rem;
+  }
+
+  .dromBlock h2 {
+    font-size: 1.55rem;
+    line-height: 1.08;
+  }
+
+  .dromBlock p {
+    margin: 0.55rem 0 0.95rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .dromLogo {
+    justify-self: start;
+    font-size: 2.2rem;
+  }
+
+  .dromLogo::before {
+    width: 2.3rem;
+    height: 2.3rem;
   }
 
   .searchForm {
@@ -820,66 +1015,52 @@
   }
 
   .categoryCard {
-    min-height: 9rem;
+    min-height: 8rem;
   }
 
   .productGrid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 0.75rem;
   }
 
   .productCard {
-    grid-template-columns: 7.5rem 1fr;
-    align-items: start;
+    gap: 0.7rem;
   }
 
   .productImage {
-    grid-row: span 5;
-    aspect-ratio: 1;
-  }
-
-  .productActions {
-    grid-column: 2;
-  }
-
-  .dromLogo {
-    justify-content: flex-start;
-  }
-
-  .cta {
-    padding: 1.5rem;
-  }
-
-  .ctaActions {
-    justify-content: flex-start;
+    aspect-ratio: 16 / 11;
   }
 }
 
-@media (max-width: 430px) {
-  .nav {
-    gap: 1rem;
-    font-size: 0.82rem;
-  }
-
-  .heroActions,
-  .ctaActions {
-    display: grid;
+/* ── 480px: маленькие телефоны ──────────────────────────────────── */
+@media (max-width: 480px) {
+  .facts {
     grid-template-columns: 1fr;
   }
 
-  .redButton,
-  .outlineButton {
-    width: 100%;
-  }
-
-  .productCard {
+  .stepGrid,
+  .reviewGrid {
     grid-template-columns: 1fr;
   }
 
-  .productImage {
-    grid-row: auto;
+  .heroInner {
+    padding: 1.2rem 0 2.8rem;
   }
 
-  .productActions {
-    grid-column: auto;
+  .dromBlock {
+    padding: 1rem;
+  }
+
+  .dromBlock h2 {
+    font-size: 1.42rem;
+  }
+
+  .dromLogo {
+    font-size: 2rem;
+  }
+
+  .dromLogo::before {
+    width: 2rem;
+    height: 2rem;
   }
 }

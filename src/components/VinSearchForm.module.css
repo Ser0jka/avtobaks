@@ -211,8 +211,8 @@
 /* Cards grid */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.25rem;
 }
 
 .card {
@@ -257,7 +257,7 @@
 .outOfStock { background: #64748b; color: #fff; }
 
 .cardBody {
-  padding: 0.85rem;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
@@ -271,8 +271,8 @@
 .cardActions {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.4rem;
-  padding: 0.65rem 0.85rem;
+  gap: 0.65rem;
+  padding: 0.8rem 1rem 1rem;
   border-top: 1px solid #e3e7ec;
 }
 
@@ -280,7 +280,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.4rem;
+  min-height: 2.45rem;
+  padding: 0.45rem 0.65rem;
   border: 1px solid #e3e7ec;
   border-radius: 6px;
   font-size: 0.75rem;
@@ -296,7 +297,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.4rem;
+  min-height: 2.45rem;
+  padding: 0.45rem 0.65rem;
   border: none;
   border-radius: 6px;
   font-size: 0.75rem;
@@ -344,5 +346,47 @@
 
   .submitBtn {
     grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 480px) {
+  .selects {
+    grid-template-columns: 1fr;
+  }
+
+  .helpBox {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .helpBox p {
+    flex: none;
+  }
+
+  .helpLink,
+  .ctaBtn {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .resultsHeader {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .resetBtn {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cardActions,
+  .resultsCta {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: stretch;
   }
 }

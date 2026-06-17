@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
+type ChatMessage = {
+  role?: string;
+  content?: string;
+};
+
 const SYSTEM_PROMPT = `Ты — Макс, умный помощник интернет-магазина автозапчастей «Автобакс» в Кемерово.
 
 О компании:
@@ -26,15 +31,41 @@ const SYSTEM_PROMPT = `Ты — Макс, умный помощник интер
 - Будь дружелюбным, как опытный консультант автомагазина
 - Можешь иногда добавить уместную эмодзи, но не переусердствуй`;
 
+function fallbackReply(messages: ChatMessage[] = []) {
+  const lastMessage =
+    [...messages]
+      .reverse()
+      .find((message) => message.role === "user" && message.content)
+      ?.content?.toLowerCase() ?? "";
+
+  if (lastMessage.includes("vin") || lastMessage.includes("вин")) {
+    return "Для подбора по VIN отправьте VIN-номер, марку, модель и год автомобиля. Если есть фото детали или артикул, тоже приложите. Менеджер Автобакс проверит совместимость и предложит варианты в наличии или под заказ.";
+  }
+
+  if (lastMessage.includes("достав")) {
+    return "По доставке лучше уточнить у менеджера: условия зависят от детали, наличия и адреса. Напишите в WhatsApp или Telegram: +7 906 986 66 61.";
+  }
+
+  if (lastMessage.includes("оплат")) {
+    return "Оплату можно согласовать с менеджером при оформлении заказа. Для точных условий напишите или позвоните: +7 906 986 66 61.";
+  }
+
+  if (lastMessage.includes("режим") || lastMessage.includes("работ")) {
+    return "Автобакс работает в Кемерово: пн-пт 9:00-20:00, суббота 10:00-18:00, воскресенье выходной. Телефон для связи: +7 906 986 66 61.";
+  }
+
+  return "Я помогу с подбором запчасти. Напишите VIN, артикул или марку, модель и год авто. Если вопрос срочный, свяжитесь с менеджером Автобакс: +7 906 986 66 61, WhatsApp или Telegram.";
+}
+
 export async function POST(req: NextRequest) {
   try {
-    const { messages } = await req.json();
+    const { messages = [] } = (await req.json()) as { messages?: ChatMessage[] };
 
     const apiKey = process.env.OPENROUTER_API_KEY;
     const model = process.env.OPENROUTER_MODEL ?? "meta-llama/llama-3.3-70b-instruct:free";
 
     if (!apiKey) {
-      return NextResponse.json({ error: "OPENROUTER_API_KEY не настроен" }, { status: 500 });
+      return NextResponse.json({ reply: fallbackReply(messages) });
     }
 
     const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -43,7 +74,7 @@ export async function POST(req: NextRequest) {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${apiKey}`,
         "HTTP-Referer": "https://avtobaks.ru",
-        "X-Title": "Автобакс",
+        "X-Title": "Avtobaks",
       },
       body: JSON.stringify({
         model,
@@ -56,14 +87,11 @@ export async function POST(req: NextRequest) {
       }),
     });
 
-    const data = await res.json();
+    const data = await res.json().catch(() => ({}));
 
     if (!res.ok) {
       console.error("OpenRouter error:", data);
-      return NextResponse.json(
-        { error: data.error?.message ?? "Ошибка API" },
-        { status: res.status }
-      );
+      return NextResponse.json({ reply: fallbackReply(messages) });
     }
 
     const reply =
@@ -73,7 +101,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ reply });
   } catch (err: unknown) {
     console.error("OpenRouter API error:", err);
-    const message = err instanceof Error ? err.message : "Ошибка сервера";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json({ reply: fallbackReply() });
   }
 }
