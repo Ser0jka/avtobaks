@@ -1,0 +1,222 @@
+.page {
+  min-height: 100vh;
+  background: #f5f6f8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Header */
+.header {
+  width: 100%;
+  padding: 1.25rem 2rem;
+  background: #fff;
+  border-bottom: 1px solid #e8eaed;
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #11151b;
+  text-decoration: none;
+}
+
+.logoMark {
+  width: 2rem; height: 2rem;
+  background: #e81722; color: #fff;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; font-weight: 900;
+}
+
+/* Card */
+.card {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #e8eaed;
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 420px;
+  margin: 2.5rem auto 1rem;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+}
+
+/* Steps */
+.steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 2rem;
+}
+
+.stepRow {
+  display: flex;
+  align-items: center;
+}
+
+.stepDot {
+  width: 2rem; height: 2rem;
+  border-radius: 50%;
+  background: #f0f2f5;
+  color: #8a96a3;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.2s, color 0.2s;
+}
+
+.stepActive {
+  background: #e81722;
+  color: #fff;
+}
+
+.stepDone {
+  background: #16a34a;
+  color: #fff;
+}
+
+.stepLine {
+  width: 3rem; height: 2px;
+  background: #e8eaed;
+  transition: background 0.2s;
+}
+
+.stepLineDone {
+  background: #16a34a;
+}
+
+/* Content */
+.title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #11151b;
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.sub {
+  font-size: 0.9rem;
+  color: #66717e;
+  margin: 0 0 1.75rem;
+  line-height: 1.5;
+}
+
+.changePhone {
+  background: none; border: none; cursor: pointer;
+  color: #e81722; font-size: 0.85rem; font-weight: 600;
+  padding: 0; margin-left: 0.5rem; font-family: inherit;
+}
+
+/* Form */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.fieldWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #3d4654;
+}
+
+.input {
+  padding: 0.8rem 1rem;
+  border: 1.5px solid #e8eaed;
+  border-radius: 10px;
+  font-size: 1rem;
+  color: #11151b;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.15s;
+  font-family: inherit;
+  width: 100%;
+}
+.input:focus { border-color: #e81722; }
+.input::placeholder { color: #adb5c2; }
+
+.inputCode {
+  padding: 0.8rem 1rem;
+  border: 1.5px solid #e8eaed;
+  border-radius: 10px;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 0.5em;
+  color: #11151b;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.15s;
+  font-family: inherit;
+  width: 100%;
+  text-align: center;
+}
+.inputCode:focus { border-color: #e81722; }
+.inputCode::placeholder { color: #d1d5db; font-size: 1.2rem; letter-spacing: 0.4em; }
+
+.inputError { border-color: #e81722 !important; }
+
+.error {
+  font-size: 0.8rem;
+  color: #e81722;
+  margin: 0;
+}
+
+.btn {
+  width: 100%;
+  padding: 0.9rem;
+  background: #e81722;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, opacity 0.15s;
+}
+.btn:hover:not(:disabled) { background: #c4111c; }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* Hints */
+.hint {
+  margin: 1rem 0 0;
+  font-size: 0.82rem;
+  color: #8a96a3;
+  text-align: center;
+}
+
+.resendBtn {
+  background: none; border: none; cursor: pointer;
+  color: #e81722; font-size: 0.82rem; font-weight: 600;
+  padding: 0; font-family: inherit; text-decoration: underline;
+}
+
+.mockNote {
+  margin: 0.75rem 0 0;
+  font-size: 0.78rem;
+  color: #adb5c2;
+  text-align: center;
+  background: #f5f6f8;
+  border-radius: 6px;
+  padding: 0.5rem;
+}
+
+.back {
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+.back a { color: #8a96a3; text-decoration: none; }
+.back a:hover { color: #e81722; }

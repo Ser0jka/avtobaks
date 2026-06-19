@@ -1,309 +1,356 @@
 "use client";
 
-import { Suspense, useMemo, useState, type FormEvent } from "react";
+import { Suspense, useState, useMemo, type FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { products } from "@/data/products";
-import { CATALOG_CATEGORIES, CAR_BRANDS, groupBrandsByLetter } from "@/data/catalog";
-import { CarIcon, SearchIcon, TruckIcon } from "@/components/Icon";
+import { CATALOG_CATEGORIES } from "@/data/catalog";
 import SiteHeader from "@/components/SiteHeader";
 import { useCart } from "@/context/CartContext";
 import styles from "./page.module.css";
 
-const POPULAR_BRANDS = ["Toyota", "Volkswagen", "BMW", "Audi", "Mercedes-Benz", "Kia", "Hyundai", "Nissan", "Ford", "Renault"];
-
-// Map catalog slug → product category string
 const SLUG_TO_CATEGORY: Record<string, string> = {
   tormoza: "Тормозная система",
   dvigatel: "Двигатель и масла",
   masla: "Двигатель и масла",
-  filtry: "Двигатель и масла",
+  filtry: "Фильтры",
   optika: "Оптика",
   avtolampy: "Оптика",
   podveska: "Подвеска",
   aksessuary: "Аксессуары",
   kovriki: "Аксессуары",
+  himiya: "Автохимия",
+  avtohimiya: "Автохимия",
+  electrika: "Электрика",
+  akkumulyatory: "Электрика",
+  schetki: "Аксессуары",
+  avtolampy2: "Оптика",
+  instrumenty: "Аксессуары",
+  glushiteli: "Двигатель и масла",
+  transmissiya: "Подвеска",
+  kuzov: "Аксессуары",
+  salon: "Аксессуары",
 };
+
+type SortKey = "popular" | "price_asc" | "price_desc" | "rating";
+
+const SORT_OPTIONS: { value: SortKey; label: string }[] = [
+  { value: "popular", label: "Сначала популярные" },
+  { value: "rating", label: "По рейтингу" },
+  { value: "price_asc", label: "Сначала дешевле" },
+  { value: "price_desc", label: "Сначала дороже" },
+];
+
+function StarIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+    </svg>
+  );
+}
 
 function CatalogContent() {
   const searchParams = useSearchParams();
-  const initialSlug = searchParams.get("category") ?? "";
-  const initialBrand = searchParams.get("brand") ?? "";
-  const initialQuery = searchParams.get("q") ?? "";
+  const categorySlug = searchParams.get("category") ?? "";
+  const searchQuery  = searchParams.get("q") ?? "";
 
-  const [activeSlug, setActiveSlug] = useState(initialSlug);
-  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
-  const [brandTab, setBrandTab] = useState<"passenger" | "truck">("passenger");
-  const [brandSearch, setBrandSearch] = useState(initialBrand);
-  const [vinValue, setVinValue] = useState("");
-  const [vinSubmitted, setVinSubmitted] = useState(false);
+  const [sort, setSort]                   = useState<SortKey>("popular");
+  const [sortOpen, setSortOpen]           = useState(false);
+  const [activeBrands, setActiveBrands]   = useState<Set<string>>(new Set());
+  const [onlyInStock, setOnlyInStock]     = useState(false);
+  const [vinValue, setVinValue]           = useState("");
+  const [vinSubmitted, setVinSubmitted]   = useState(false);
+  const [sidebarOpen, setSidebarOpen]     = useState(false);
 
   const { addItem } = useCart();
 
-  const filteredBrands = useMemo(() => {
-    const q = brandSearch.toLowerCase().trim();
-    const brands = q
-      ? CAR_BRANDS.filter((b) => b.name.toLowerCase().includes(q))
-      : CAR_BRANDS;
-    return groupBrandsByLetter(brands);
-  }, [brandSearch]);
+  const activeCategory = CATALOG_CATEGORIES.find((c) => c.slug === categorySlug);
 
-  const productCategory = activeSlug ? (SLUG_TO_CATEGORY[activeSlug] ?? "") : "";
-  const categoryProducts = activeSlug
-    ? products.filter((p) => productCategory && p.category === productCategory)
-    : products;
-  const productQuery = initialQuery.trim().toLowerCase();
-  const filteredProducts = productQuery
-    ? categoryProducts.filter((p) =>
-        [p.title, p.article, p.category, p.description]
-          .join(" ")
-          .toLowerCase()
-          .includes(productQuery),
-      )
-    : categoryProducts;
+  // ── Filtered + sorted products ──
+  const visibleProducts = useMemo(() => {
+    const catLabel = categorySlug ? (SLUG_TO_CATEGORY[categorySlug] ?? "") : "";
+    let list = categorySlug
+      ? products.filter((p) => catLabel && p.category === catLabel)
+      : products;
 
-  const activeCategory = CATALOG_CATEGORIES.find((c) => c.slug === activeSlug);
-  const productsTitle = productQuery
-    ? `Поиск: ${initialQuery.trim()}`
-    : activeCategory
-      ? activeCategory.label
-      : "Все товары";
+    const q = searchQuery.trim().toLowerCase();
+    if (q) list = list.filter((p) =>
+      [p.title, p.article, p.category, p.description, p.brand].join(" ").toLowerCase().includes(q)
+    );
+    if (activeBrands.size > 0) list = list.filter((p) => activeBrands.has(p.brand));
+    if (onlyInStock) list = list.filter((p) => p.inStock);
 
-  function handleVinSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (!vinValue.trim()) return;
-    setVinSubmitted(true);
+    switch (sort) {
+      case "price_asc":  return [...list].sort((a, b) => a.price - b.price);
+      case "price_desc": return [...list].sort((a, b) => b.price - a.price);
+      case "rating":     return [...list].sort((a, b) => b.rating - a.rating);
+      default:           return [...list].sort((a, b) => b.reviews - a.reviews);
+    }
+  }, [categorySlug, searchQuery, activeBrands, onlyInStock, sort]);
+
+  // Brands available in current category
+  const availableBrands = useMemo(() => {
+    const catLabel = categorySlug ? (SLUG_TO_CATEGORY[categorySlug] ?? "") : "";
+    const list = categorySlug ? products.filter((p) => catLabel && p.category === catLabel) : products;
+    return Array.from(new Set(list.map((p) => p.brand))).sort();
+  }, [categorySlug]);
+
+  function toggleBrand(brand: string) {
+    setActiveBrands((prev) => {
+      const next = new Set(prev);
+      next.has(brand) ? next.delete(brand) : next.add(brand);
+      return next;
+    });
   }
 
+  function handleVinSubmit(e: FormEvent) {
+    e.preventDefault();
+    if (vinValue.trim()) setVinSubmitted(true);
+  }
+
+  const currentSortLabel = SORT_OPTIONS.find((o) => o.value === sort)?.label ?? "Сортировка";
+
+  // ═══════════════════════════════════════════════
+  // Главная каталога — без параметров
+  // ═══════════════════════════════════════════════
+  if (!categorySlug && !searchQuery) {
+    return (
+      <div className={styles.page}>
+        <SiteHeader active="catalog" />
+        <div className={styles.wrap}>
+          <nav className={styles.breadcrumb}>
+            <Link href="/">Главная</Link><span>/</span><span>Каталог</span>
+          </nav>
+          <h1 className={styles.pageTitle}>Каталог запчастей и товаров</h1>
+
+          {/* VIN block */}
+          <div className={styles.vinCard}>
+            <div className={styles.vinCardLeft}>
+              <p className={styles.vinCardTitle}>Найти запчасти по VIN</p>
+              <p className={styles.vinCardDesc}>Введите VIN-номер или номер кузова</p>
+              <form className={styles.vinForm} onSubmit={handleVinSubmit}>
+                <input className={styles.vinInput} placeholder="VIN / FRAME"
+                  value={vinValue} onChange={(e) => { setVinValue(e.target.value); setVinSubmitted(false); }} />
+                <button className={styles.vinBtn} type="submit">Найти</button>
+              </form>
+              {vinSubmitted && <p className={styles.vinNotice}>VIN принят. Менеджер свяжется для подбора.</p>}
+            </div>
+            <div className={styles.vinCardIcon} aria-hidden>
+              <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="4" y="20" width="56" height="28" rx="4"/>
+                <path d="M12 20l6-10h28l6 10"/>
+                <circle cx="16" cy="40" r="6"/><circle cx="48" cy="40" r="6"/>
+                <path d="M22 40h20M4 32h4M56 32h4"/>
+              </svg>
+            </div>
+          </div>
+
+          <div className={styles.section}>
+            <div className={styles.sectionGrid}>
+              {CATALOG_CATEGORIES.map((cat) => (
+                <Link key={cat.slug} href={`/catalog?category=${cat.slug}`} className={styles.catCard}>
+                  <span className={styles.catCardIcon}>{cat.icon}</span>
+                  <span className={styles.catCardLabel}>{cat.label}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ═══════════════════════════════════════════════
+  // Страница категории / поиска — с сайдбаром
+  // ═══════════════════════════════════════════════
   return (
     <div className={styles.page}>
       <SiteHeader active="catalog" />
 
-      {/* Breadcrumb */}
-      <nav className={styles.breadcrumb}>
-        <Link href="/">Главная</Link>
-        <span>/</span>
-        <Link href="/catalog">Каталог</Link>
-        {activeCategory && (
-          <>
-            <span>/</span>
-            <span>{activeCategory.label}</span>
-          </>
-        )}
-      </nav>
+      <div className={styles.wrap}>
+        {/* Breadcrumb */}
+        <nav className={styles.breadcrumb}>
+          <Link href="/">Главная</Link><span>/</span>
+          <Link href="/catalog">Каталог</Link>
+          {activeCategory && <><span>/</span><span>{activeCategory.label}</span></>}
+          {searchQuery && <><span>/</span><span>Поиск: {searchQuery}</span></>}
+        </nav>
 
-      {/* Layout */}
-      <div className={styles.layout}>
-        {/* ── Mobile sidebar toggle ── */}
-        <div className={styles.mobileSidebarToggle}>
-          <button
-            className={styles.mobileSidebarBtn}
-            onClick={() => setMobileSidebarOpen((v) => !v)}
-          >
-            <span className={styles.mobileSidebarIcon}>
-              {mobileSidebarOpen ? "✕" : "☰"}
-            </span>
-            {activeSlug
-              ? (CATALOG_CATEGORIES.find((c) => c.slug === activeSlug)?.label ?? "Категории")
-              : "Выбрать категорию"}
-            {activeSlug && <span className={styles.activeFilterDot} />}
-          </button>
-          {activeSlug && (
-            <button
-              className={styles.clearFilterBtn}
-              onClick={() => {
-                setActiveSlug("");
-                setMobileSidebarOpen(false);
-              }}
-            >
-              Сбросить ✕
-            </button>
-          )}
+        {/* Page header */}
+        <div className={styles.listingHeader}>
+          <h1 className={styles.pageTitle}>
+            {searchQuery ? `Поиск: ${searchQuery}` : activeCategory?.label ?? "Каталог"}
+            <span className={styles.countBadge}>{visibleProducts.length} товаров</span>
+          </h1>
         </div>
 
-        {/* ── Left sidebar ── */}
-        <aside className={`${styles.sidebar} ${mobileSidebarOpen ? styles.sidebarMobileOpen : ""}`}>
-          {/* VIN mini-block */}
-          <div className={styles.sidebarVin}>
-            <p className={styles.sidebarVinTitle}>Оригинальные каталоги</p>
-            <p className={styles.sidebarVinDesc}>
-              Поиск по VIN / номеру кузова или по марке и модели автомобиля
-            </p>
-            <div className={styles.sidebarVinBtns}>
-              <a href="#vin" className={styles.btnVinGreen}>Найти по VIN</a>
-              <a href="#brands" className={styles.btnVinOutline}>Найти по марке</a>
-            </div>
-          </div>
-
-          {/* Category list */}
-          <ul className={styles.catList}>
-            {CATALOG_CATEGORIES.map((cat) => (
-              <li key={cat.slug} className={styles.catItem}>
+        <div className={styles.listingLayout}>
+          {/* ── Sidebar ── */}
+          <aside className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : ""}`}>
+            {/* Только в наличии */}
+            <div className={styles.filterBlock}>
+              <label className={styles.stockToggle}>
+                <span className={styles.stockLabel}>Только в наличии</span>
                 <button
-                  className={`${styles.catBtn} ${activeSlug === cat.slug ? styles.active : ""}`}
-                  onClick={() => {
-                    setActiveSlug(activeSlug === cat.slug ? "" : cat.slug);
-                    setMobileSidebarOpen(false);
-                  }}
+                  className={`${styles.toggle} ${onlyInStock ? styles.toggleOn : ""}`}
+                  onClick={() => setOnlyInStock((v) => !v)}
+                  aria-pressed={onlyInStock}
                 >
-                  <span className={styles.catIcon}>{cat.icon}</span>
-                  {cat.label}
+                  <span className={styles.toggleThumb} />
                 </button>
-              </li>
-            ))}
-          </ul>
-        </aside>
+              </label>
+            </div>
 
-        {/* ── Right content ── */}
-        <div className={styles.content}>
-          {/* VIN search */}
-          <div className={styles.vinBlock} id="vin">
-            <div className={styles.vinBlockLeft}>
-              <h1 className={styles.vinBlockTitle}>Найти запчасти по VIN</h1>
-              <p className={styles.vinBlockDesc}>
-                Введите VIN-номер или номер кузова, чтобы найти подходящие запчасти
-              </p>
-              <form className={styles.vinForm} onSubmit={handleVinSubmit}>
-                <input
-                  className={styles.vinInput}
-                  placeholder="Введите VIN · Frame"
-                  value={vinValue}
-                  onChange={(e) => {
-                    setVinValue(e.target.value);
-                    setVinSubmitted(false);
-                  }}
-                />
-                <button className={styles.vinSubmit} type="submit">Найти запчасти</button>
-              </form>
-              <div className={styles.vinExamples}>
-                <span>Пример VIN: <span>WAUZZZ4M0HD042149</span></span>
-                <span>Пример кузова: <span>SGL5-400683</span></span>
+            {/* Производитель */}
+            {availableBrands.length > 0 && (
+              <div className={styles.filterBlock}>
+                <p className={styles.filterTitle}>Производитель</p>
+                {availableBrands.map((brand) => (
+                  <label key={brand} className={styles.checkLabel}>
+                    <input
+                      type="checkbox"
+                      className={styles.check}
+                      checked={activeBrands.has(brand)}
+                      onChange={() => toggleBrand(brand)}
+                    />
+                    <span className={styles.checkBox} />
+                    <span className={styles.checkText}>{brand}</span>
+                  </label>
+                ))}
+                {activeBrands.size > 0 && (
+                  <button className={styles.resetLink} onClick={() => setActiveBrands(new Set())}>
+                    Сбросить
+                  </button>
+                )}
               </div>
-              {vinSubmitted && (
-                <p className={styles.vinNotice}>
-                  VIN принят. Для точного подбора оставьте заявку, и менеджер проверит совместимость детали.
-                </p>
-              )}
-            </div>
-            <div className={styles.vinIllustration} aria-hidden="true">⚙️</div>
-          </div>
+            )}
 
-          {/* Brand search */}
-          <div className={styles.brandBlock} id="brands">
-            {/* Popular brands quick chips */}
-            <div className={styles.popularBrands}>
-              <span className={styles.popularBrandsLabel}>Популярные:</span>
-              {POPULAR_BRANDS.map((name) => (
-                <a
-                  key={name}
-                  href={`/catalog?brand=${encodeURIComponent(name)}`}
-                  className={`${styles.brandChip} ${brandSearch === name ? styles.brandChipActive : ""}`}
-                  onClick={() => setBrandSearch(name)}
-                >
-                  {name}
-                </a>
+            {/* Другие категории */}
+            <div className={styles.filterBlock}>
+              <p className={styles.filterTitle}>Другие категории</p>
+              {CATALOG_CATEGORIES.filter((c) => c.slug !== categorySlug).slice(0, 8).map((cat) => (
+                <Link key={cat.slug} href={`/catalog?category=${cat.slug}`} className={styles.catSideLink}>
+                  <span className={styles.catSideIcon}>{cat.icon}</span>
+                  {cat.label}
+                </Link>
               ))}
+              <Link href="/catalog" className={styles.resetLink}>Все категории →</Link>
             </div>
+          </aside>
 
-            <div className={styles.brandTabs}>
-              <button
-                className={`${styles.brandTab} ${brandTab === "passenger" ? styles.active : ""}`}
-                onClick={() => setBrandTab("passenger")}
-              >
-                <CarIcon />
-                Легковые
+          {/* ── Main ── */}
+          <div className={styles.listingMain}>
+            {/* Toolbar */}
+            <div className={styles.toolbar}>
+              <button className={styles.filterToggleBtn} onClick={() => setSidebarOpen((v) => !v)}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/><line x1="12" y1="18" x2="20" y2="18"/>
+                </svg>
+                Фильтры
+                {(activeBrands.size > 0 || onlyInStock) && <span className={styles.filterDot} />}
               </button>
-              <button
-                className={`${styles.brandTab} ${brandTab === "truck" ? styles.active : ""}`}
-                onClick={() => setBrandTab("truck")}
-              >
-                <TruckIcon />
-                Грузовые
-              </button>
-              <div className={styles.brandSearch}>
-                <SearchIcon className={styles.brandSearchIcon} />
-                <input
-                  className={styles.brandSearchInput}
-                  placeholder="Искать в списке"
-                  value={brandSearch}
-                  onChange={(e) => setBrandSearch(e.target.value)}
-                />
+
+              {/* Sort dropdown */}
+              <div className={styles.sortWrap}>
+                <button className={styles.sortBtn} onClick={() => setSortOpen((v) => !v)}>
+                  {currentSortLabel}
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                    <polyline points="6 9 12 15 18 9"/>
+                  </svg>
+                </button>
+                {sortOpen && (
+                  <div className={styles.sortMenu}>
+                    {SORT_OPTIONS.map((opt) => (
+                      <button
+                        key={opt.value}
+                        className={`${styles.sortOption} ${sort === opt.value ? styles.sortOptionActive : ""}`}
+                        onClick={() => { setSort(opt.value); setSortOpen(false); }}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
+
+              <span className={styles.toolbarCount}>{visibleProducts.length} товаров</span>
             </div>
 
-            <div className={styles.brandGrid}>
-              {Array.from(filteredBrands.entries()).map(([letter, names]) => (
-                <div key={letter} className={styles.brandLetterGroup}>
-                  <p className={styles.brandLetter}>{letter}</p>
-                  {names.map((name) => (
-                    <a
-                      key={name}
-                      href={`/catalog?brand=${encodeURIComponent(name)}`}
-                      className={styles.brandLink}
-                    >
-                      {name}
-                    </a>
-                  ))}
-                </div>
-              ))}
-            </div>
-          </div>
+            {/* Active filters chips */}
+            {(activeBrands.size > 0 || onlyInStock) && (
+              <div className={styles.activeFilters}>
+                {onlyInStock && (
+                  <span className={styles.chip}>
+                    В наличии
+                    <button onClick={() => setOnlyInStock(false)}>✕</button>
+                  </span>
+                )}
+                {Array.from(activeBrands).map((b) => (
+                  <span key={b} className={styles.chip}>
+                    {b}
+                    <button onClick={() => toggleBrand(b)}>✕</button>
+                  </span>
+                ))}
+                <button className={styles.clearAll} onClick={() => { setActiveBrands(new Set()); setOnlyInStock(false); }}>
+                  Сбросить всё
+                </button>
+              </div>
+            )}
 
-          {/* Products (shown when category selected OR always show all) */}
-          <div className={styles.productsSection}>
-            <div className={styles.productsSectionTitle}>
-              <span>
-                {productsTitle}
-              </span>
-              <span className={styles.productsSectionCount}>
-                {filteredProducts.length} позиц.
-              </span>
-            </div>
-
-            {filteredProducts.length === 0 ? (
+            {/* Products */}
+            {visibleProducts.length === 0 ? (
               <div className={styles.empty}>
-                <p>Товаров в этой категории пока нет.</p>
-                <p style={{ marginTop: "0.4rem", fontSize: "0.85rem" }}>
-                  Оставьте заявку и мы подберём нужную деталь.
-                </p>
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+                  <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
+                </svg>
+                <p>Товары не найдены</p>
+                <button onClick={() => { setActiveBrands(new Set()); setOnlyInStock(false); }} className={styles.emptyBtn}>
+                  Сбросить фильтры
+                </button>
               </div>
             ) : (
-              <div className={styles.grid}>
-                {filteredProducts.map((product) => (
+              <div className={styles.productsGrid}>
+                {visibleProducts.map((product) => (
                   <article className={styles.card} key={product.id}>
                     <div className={styles.cardImage}>
                       <Image
                         src={product.image}
                         alt={product.title}
                         fill
-                        sizes="(max-width: 768px) 50vw, 210px"
+                        sizes="(max-width: 768px) 50vw, 220px"
                         style={{ objectFit: "cover" }}
+                        unoptimized
                       />
-                      <span
-                        className={`${styles.badge} ${
-                          product.inStock ? styles.inStock : styles.outOfStock
-                        }`}
-                      >
-                        {product.inStock ? "В наличии" : "Под заказ"}
-                      </span>
+                      {!product.inStock && (
+                        <span className={styles.badgeOrder}>Под заказ</span>
+                      )}
                     </div>
                     <div className={styles.cardBody}>
+                      {product.inStock ? (
+                        <p className={styles.cardStock}>
+                          В наличии {product.stockCount && `${product.stockCount} шт`}
+                        </p>
+                      ) : (
+                        <p className={styles.cardStockOut}>Под заказ</p>
+                      )}
                       <h3 className={styles.cardTitle}>{product.title}</h3>
-                      <p className={styles.cardArticle}>Арт: {product.article}</p>
-                      <p className={styles.cardPrice}>
-                        {product.price.toLocaleString("ru-RU")} ₽
-                      </p>
+                      <p className={styles.cardDelivery}>Доставка от 1 рабочего дня</p>
+                      <div className={styles.cardRating}>
+                        <StarIcon />
+                        <span>{product.rating}</span>
+                        <span className={styles.cardReviews}>{product.reviews} оценок</span>
+                      </div>
                     </div>
-                    <div className={styles.cardActions}>
-                      <Link className={styles.btnOutline} href="/#request">
-                        Подробнее
-                      </Link>
-                      <button
-                        className={styles.btnCart}
-                        onClick={() => addItem(product)}
-                      >
-                        🛒 В корзину
+                    <div className={styles.cardFooter}>
+                      <div className={styles.cardPrices}>
+                        {product.oldPrice && (
+                          <span className={styles.cardOldPrice}>{product.oldPrice.toLocaleString("ru-RU")} ₽</span>
+                        )}
+                        <span className={styles.cardPrice}>от {product.price.toLocaleString("ru-RU")} ₽</span>
+                      </div>
+                      <button className={styles.btnCart} onClick={() => addItem(product)}>
+                        В корзину
                       </button>
                     </div>
                   </article>
@@ -319,7 +366,7 @@ function CatalogContent() {
 
 export default function CatalogPage() {
   return (
-    <Suspense fallback={<div className={styles.page} />}>
+    <Suspense fallback={<div style={{ minHeight: "100vh", background: "#f5f6f8" }} />}>
       <CatalogContent />
     </Suspense>
   );

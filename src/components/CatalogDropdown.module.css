@@ -1,10 +1,10 @@
-/* Trigger button */
+/* ── Trigger ──────────────────────────────────────────────── */
 .trigger {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background: var(--red, #e81722);
+  padding: 0.55rem 1.1rem;
+  background: #e81722;
   color: #fff;
   font-size: 0.875rem;
   font-weight: 700;
@@ -13,32 +13,26 @@
   cursor: pointer;
   white-space: nowrap;
   transition: background 0.15s;
+  flex-shrink: 0;
   position: relative;
   z-index: 10;
 }
+.trigger:hover,
+.triggerOpen { background: #c4111c; }
 
-.trigger:hover { background: #c4111c; }
-
-.triggerIcon {
-  font-size: 1rem;
-  transition: transform 0.2s;
-}
-
-.triggerIcon.open { transform: rotate(45deg); }
-
-/* Wrapper (for positioning) */
+/* ── Wrapper ──────────────────────────────────────────────── */
 .wrapper {
   position: relative;
 }
 
-/* Overlay behind panel */
+/* ── Overlay ──────────────────────────────────────────────── */
 .overlay {
   position: fixed;
   inset: 0;
   z-index: 90;
 }
 
-/* Panel */
+/* ── Panel ────────────────────────────────────────────────── */
 .panel {
   position: absolute;
   top: calc(100% + 0.5rem);
@@ -58,7 +52,7 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* VIN mini block */
+/* ── VIN block ────────────────────────────────────────────── */
 .panelVin {
   padding: 1rem;
   background: #f5f7fa;
@@ -91,7 +85,7 @@
   justify-content: center;
   padding: 0.5rem;
   background: #16a34a;
-  color: #fff;
+  color: #fff !important;
   font-size: 0.8rem;
   font-weight: 700;
   border-radius: 7px;
@@ -106,7 +100,7 @@
   justify-content: center;
   padding: 0.5rem;
   background: #fff;
-  color: #11151b;
+  color: #11151b !important;
   font-size: 0.8rem;
   font-weight: 600;
   border-radius: 7px;
@@ -116,7 +110,7 @@
 }
 .btnOutline:hover { background: #f5f7fa; }
 
-/* Category list */
+/* ── Category list ────────────────────────────────────────── */
 .catList {
   list-style: none;
   max-height: 420px;
@@ -134,22 +128,29 @@
   gap: 0.7rem;
   padding: 0.65rem 1rem;
   font-size: 0.875rem;
-  color: #11151b;
+  color: #11151b !important;
   text-decoration: none;
   transition: background 0.12s, color 0.12s;
 }
-
 .catLink:hover {
   background: #fff0f0;
-  color: #e81722;
+  color: #e81722 !important;
 }
 
 .catIcon {
-  font-size: 1rem;
   width: 1.4rem;
-  text-align: center;
+  height: 1.4rem;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #66717e;
 }
+.catIcon svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+.catLink:hover .catIcon { color: #e81722; }
 
 .catArrow {
   margin-left: auto;

@@ -1,32 +1,38 @@
-import type { CSSProperties } from "react";
 import Link from "next/link";
-import styles from "@/app/page.module.css";
-import { categories } from "./content";
+import { CATALOG_CATEGORIES } from "@/data/catalog";
+import styles from "./CategorySection.module.css";
 
-function categoryStyle(image: string): CSSProperties {
-  return {
-    backgroundImage: `linear-gradient(180deg, rgba(5, 9, 13, 0.2), rgba(5, 9, 13, 0.32)), url(${image})`,
-  };
-}
+// Показываем первые 8 категорий на главной
+const VISIBLE_SLUGS = [
+  "filtry",
+  "dvigatel",
+  "masla",
+  "podveska",
+  "tormoza",
+  "akkumulyatory",
+  "himiya",
+  "instrumenty",
+];
 
 export default function CategorySection() {
+  const cats = VISIBLE_SLUGS
+    .map((slug) => CATALOG_CATEGORIES.find((c) => c.slug === slug))
+    .filter(Boolean) as typeof CATALOG_CATEGORIES;
+
   return (
-    <section className={styles.section} id="catalog">
-      <div className={styles.sectionHead}>
-        <h2>Популярные категории</h2>
-        <a href="#request">Нужна консультация</a>
-      </div>
-      <div className={styles.categoryGrid}>
-        {categories.map((category) => (
-          <Link
-            href={`/catalog?category=${category.slug}`}
-            className={styles.categoryCard}
-            key={category.slug}
-            style={categoryStyle(category.image)}
-          >
-            <span>{category.title}</span>
-          </Link>
-        ))}
+    <section className={styles.wrap} id="catalog">
+      <div className={styles.inner}>
+        <div className={styles.head}>
+          <Link href="/catalog" className={styles.headTitle}>Каталоги ›</Link>
+        </div>
+        <div className={styles.grid}>
+          {cats.map((cat) => (
+            <Link key={cat.slug} href={`/catalog?category=${cat.slug}`} className={styles.card}>
+              <span className={styles.iconWrap}>{cat.icon}</span>
+              <span className={styles.label}>{cat.label}</span>
+            </Link>
+          ))}
+        </div>
       </div>
     </section>
   );

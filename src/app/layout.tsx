@@ -1,10 +1,26 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Montserrat, Inter } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
+import { AuthProvider } from "@/context/AuthContext";
 import { CartDrawer, CartFloatButton } from "@/components/CartDrawer";
 import FloatContacts from "@/components/FloatContacts";
 import ChatWidget from "@/components/ChatWidget";
+
+const montserrat = Montserrat({
+  subsets: ["latin", "cyrillic"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  variable: "--font-montserrat",
+  display: "swap",
+});
+
+const inter = Inter({
+  subsets: ["latin", "cyrillic"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  variable: "--font-inter",
+  display: "swap",
+});
 
 const gilroy = localFont({
   src: [
@@ -32,15 +48,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru" className={gilroy.variable}>
+    <html lang="ru" className={`${gilroy.variable} ${montserrat.variable} ${inter.variable}`}>
       <body>
-        <CartProvider>
-          {children}
-          <CartDrawer />
-          <CartFloatButton />
-          <FloatContacts />
-          <ChatWidget />
-        </CartProvider>
+        <AuthProvider>
+          <CartProvider>
+            {children}
+            <CartDrawer />
+            <CartFloatButton />
+            <FloatContacts />
+            <ChatWidget />
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

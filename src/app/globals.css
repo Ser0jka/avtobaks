@@ -21,7 +21,7 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family:
-    var(--font-gilroy), "Segoe UI", Roboto, Arial, Helvetica, sans-serif;
+    var(--font-inter), var(--font-gilroy), "Segoe UI", Roboto, Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

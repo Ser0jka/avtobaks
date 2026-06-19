@@ -102,8 +102,11 @@ export default function HitProducts() {
       price: p.priceNum,
       category: p.category,
       inStock: true,
-      image: partsPhoto,
+      image: "/сcategories/1.webp",
       description: "",
+      brand: "",
+      rating: 0,
+      reviews: 0,
     });
   }
 

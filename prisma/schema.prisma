@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  phone     String   @unique
+  name      String   @default("Пользователь")
+  email     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orders    Order[]
+  favorites Favorite[]
+  smsCodes  SmsCode[]
+}
+
+model SmsCode {
+  id        String   @id @default(cuid())
+  phone     String
+  code      String
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user   User?   @relation(fields: [phone], references: [phone])
+
+  @@index([phone])
+}
+
+model Order {
+  id             String       @id @default(cuid())
+  userId         String?
+  status         OrderStatus  @default(processing)
+  total          Float
+  customerName   String
+  customerPhone  String
+  deliveryType   String       @default("pickup") // pickup | delivery
+  address        String?
+  comment        String?
+  createdAt      DateTime     @default(now())
+
+  user  User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  items OrderItem[]
+}
+
+model OrderItem {
+  id      String @id @default(cuid())
+  orderId String
+  title   String
+  qty     Int
+  price   Float
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model Favorite {
+  id        String @id @default(cuid())
+  userId    String
+  productId String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+}
+
+enum OrderStatus {
+  processing
+  shipped
+  delivered
+  cancelled
+}

@@ -3,7 +3,6 @@ import {
   AdvantagesSection,
   CategorySection,
   DromSection,
-  FactsStrip,
   HomeFooter,
   HomeHeader,
   HomeHero,
@@ -20,9 +19,8 @@ export default function Home() {
     <main className={styles.page}>
       <HomeHeader />
       <HomeHero />
-      <FactsStrip />
-      <QuickSearchSection />
       <CategorySection />
+      <QuickSearchSection />
       <StepsSection />
 
       <section className={styles.section}>
