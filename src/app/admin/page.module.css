@@ -237,11 +237,277 @@
 .orderItems { display: flex; flex-direction: column; gap: 0.2rem; }
 .orderItem { font-size: 0.8rem; color: #66717e; }
 
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.tabs button,
+.primaryBtn {
+  border: 1px solid #e8eaed;
+  background: #fff;
+  color: #3d4654;
+  border-radius: 9px;
+  padding: 0.65rem 1rem;
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tabs button:hover {
+  border-color: #e81722;
+  color: #e81722;
+}
+
+.tabs .tabActive,
+.primaryBtn {
+  background: #e81722;
+  border-color: #e81722;
+  color: #fff;
+}
+
+.primaryBtn:hover:not(:disabled) {
+  background: #c4111c;
+}
+
+.primaryBtn:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.notice {
+  margin-bottom: 1rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid #dbeafe;
+  background: #eff6ff;
+  color: #1e40af;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.adminGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 1rem;
+  align-items: start;
+}
+
+.productCell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 260px;
+}
+
+.productCell img {
+  width: 54px;
+  height: 42px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #f0f2f5;
+  border: 1px solid #e8eaed;
+  flex-shrink: 0;
+}
+
+.productCell div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.productCell strong {
+  color: #11151b;
+  line-height: 1.25;
+}
+
+.productCell span {
+  color: #8a96a3;
+  font-size: 0.78rem;
+}
+
+.editorPanel {
+  position: sticky;
+  top: 4.5rem;
+  background: #fff;
+  border: 1px solid #e8eaed;
+  border-radius: 14px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.editorPanel h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: #11151b;
+}
+
+.editorPanel label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  color: #66717e;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.editorPanel input,
+.editorPanel textarea {
+  width: 100%;
+  border: 1.5px solid #e8eaed;
+  border-radius: 8px;
+  padding: 0.65rem 0.75rem;
+  font: inherit;
+  font-size: 0.86rem;
+  color: #11151b;
+  outline: none;
+}
+
+.editorPanel textarea {
+  min-height: 92px;
+  resize: vertical;
+}
+
+.editorPanel input:focus,
+.editorPanel textarea:focus {
+  border-color: #e81722;
+}
+
+.editorTwo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.checkboxLine {
+  flex-direction: row !important;
+  align-items: center;
+}
+
+.checkboxLine input {
+  width: auto;
+}
+
+.offerList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.75rem;
+  background: #f8f9fb;
+  border-radius: 10px;
+}
+
+.offerList h3 {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #11151b;
+}
+
+.offerList p {
+  margin: 0;
+  color: #66717e;
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.editorActions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.emptyPanel,
+.emptyCard {
+  color: #66717e;
+  line-height: 1.5;
+}
+
+.emptyPanel h2 {
+  margin-bottom: 0.4rem;
+}
+
+.vinList {
+  display: grid;
+  gap: 1rem;
+}
+
+.vinCard {
+  background: #fff;
+  border: 1px solid #e8eaed;
+  border-radius: 14px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.vinHead {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.vinHead div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.vinHead strong {
+  font-size: 1rem;
+  color: #11151b;
+}
+
+.vinHead span,
+.vinMeta,
+.vinComment,
+.backendLog {
+  color: #66717e;
+  font-size: 0.86rem;
+}
+
+.vinMeta,
+.vinSummary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+}
+
+.vinSummary span {
+  display: inline-flex;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  background: #f0f2f5;
+  color: #3d4654;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.vinComment,
+.backendLog {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.backendLog {
+  padding: 0.7rem 0.85rem;
+  border-radius: 9px;
+  background: #f8f9fb;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .stats { grid-template-columns: 1fr 1fr; }
   .stats .stat:last-child { grid-column: span 2; }
   .wrap { padding: 1rem 0.75rem 3rem; }
+  .adminGrid { grid-template-columns: 1fr; }
+  .editorPanel { position: static; }
   .table th:nth-child(3),
   .table td:nth-child(3),
   .table th:nth-child(5),

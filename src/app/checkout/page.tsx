@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import SiteHeader from "@/components/SiteHeader";
@@ -11,7 +10,6 @@ import styles from "./page.module.css";
 type DeliveryType = "pickup" | "delivery";
 
 export default function CheckoutPage() {
-  const router = useRouter();
   const { items, totalPrice, clearCart } = useCart();
   const { user } = useAuth();
 

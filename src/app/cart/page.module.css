@@ -75,6 +75,20 @@
   border-radius: 8px; overflow: hidden; background: #f5f6f8;
 }
 
+.itemImgFallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem;
+  color: #66717e;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
 .itemInfo { min-width: 0; }
 .itemBrand { font-size: 0.75rem; color: #adb5c2; font-weight: 600; margin: 0 0 0.2rem; text-transform: uppercase; letter-spacing: 0.04em; }
 .itemTitle { font-size: 0.9rem; font-weight: 600; color: #11151b; margin: 0 0 0.2rem; line-height: 1.3; }

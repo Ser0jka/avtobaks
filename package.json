@@ -6,13 +6,26 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "prisma:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "catalog:import": "node scripts/import-catalog.mjs",
+    "rossko:queries": "cd Avtobaks_API && .\\.venv\\Scripts\\python.exe main.py generate-rossko-queries --output catalog/rossko_bulk_queries.txt",
+    "rossko:reset-sync": "powershell -NoProfile -Command \"Remove-Item -LiteralPath 'Avtobaks_API\\catalog\\rossko_sync_state.json' -Force -ErrorAction SilentlyContinue; Write-Host 'Rossko sync state reset'\"",
+    "rossko:sync:bulk": "cd Avtobaks_API && .\\.venv\\Scripts\\python.exe main.py sync-rossko --partsapi-categories catalog/partsapi_categories.json --include-default-queries --include-default-brands --expand-brands --include-crosses --limit 50000 --delay 0.6 --query-output catalog/rossko_bulk_queries.txt --continue-on-error",
+    "rossko:sync:huge": "cd Avtobaks_API && .\\.venv\\Scripts\\python.exe main.py sync-rossko --partsapi-categories catalog/partsapi_categories.json --include-default-queries --include-default-brands --expand-brands --include-crosses --limit 250000 --delay 0.35 --query-output catalog/rossko_bulk_queries.txt --continue-on-error",
+    "rossko:queries:prefix": "cd Avtobaks_API && .\\.venv\\Scripts\\python.exe main.py generate-rossko-queries --article-prefixes --no-include-default-queries --no-include-default-brands --no-expand-brands --prefix-min-length 2 --prefix-max-length 3 --output catalog/rossko_article_prefix_queries.txt",
+    "rossko:sync:prefix": "cd Avtobaks_API && .\\.venv\\Scripts\\python.exe main.py sync-rossko --article-prefixes --prefix-min-length 2 --prefix-max-length 3 --include-crosses --limit 250000 --delay 0.35 --query-output catalog/rossko_article_prefix_queries.txt --continue-on-error",
+    "vin:test": ".\\Avtobaks_API\\.venv\\Scripts\\python.exe Avtobaks_API\\vin_selection.py --vin Z8TXLCW6WCM902224 --parts \"воздушный фильтр\" --use-partsapi-vin --partsapi-type oem --partsapi-cat 8 --partsapi-preferred-brand MITSUBISHI --max-partsapi-parts 3 --limit-per-target 1",
+    "catalog:images": "cd Avtobaks_API && .\\.venv\\Scripts\\python.exe main.py enrich-images --limit 200 --use-web-search --web-candidates 8 --use-partsapi --partsapi-budget 80",
+    "catalog:images:bulk": "cd Avtobaks_API && .\\.venv\\Scripts\\python.exe main.py enrich-images --limit 1000 --use-web-search --web-candidates 8 --use-partsapi --partsapi-budget 250",
+    "catalog:refresh-images": "pnpm catalog:images && pnpm catalog:import"
   },
   "dependencies": {
-    "@prisma/client": "^7.8.0",
+    "@prisma/client": "^6.19.0",
     "groq-sdk": "^1.2.1",
     "next": "16.2.9",
-    "prisma": "^7.8.0",
+    "prisma": "^6.19.0",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },
@@ -24,5 +37,6 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
     "typescript": "5.9.3"
-  }
+  },
+  "packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0"
 }

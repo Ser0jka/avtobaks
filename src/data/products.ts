@@ -8,7 +8,7 @@ export type Product = {
   brand: string;
   inStock: boolean;
   stockCount?: number;
-  image: string;
+  image: string | null;
   description: string;
   rating: number;
   reviews: number;

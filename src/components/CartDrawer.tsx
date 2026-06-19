@@ -50,13 +50,17 @@ export function CartDrawer() {
             {items.map((item) => (
               <div className={styles.item} key={item.id}>
                 <div className={styles.itemImage}>
-                  <Image
-                    src={item.image}
-                    alt={item.title}
-                    fill
-                    sizes="72px"
-                    style={{ objectFit: "cover" }}
-                  />
+                  {item.image ? (
+                    <Image
+                      src={item.image}
+                      alt={item.title}
+                      fill
+                      sizes="72px"
+                      style={{ objectFit: "cover" }}
+                    />
+                  ) : (
+                    <span className={styles.itemImageFallback}>{item.article}</span>
+                  )}
                 </div>
                 <div className={styles.itemInfo}>
                   <p className={styles.itemTitle}>{item.title}</p>

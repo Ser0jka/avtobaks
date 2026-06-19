@@ -69,6 +69,81 @@ model Favorite {
   @@unique([userId, productId])
 }
 
+model CatalogProduct {
+  id           String   @id
+  title        String
+  article      String
+  brand        String
+  category     String   @default("")
+  description  String   @default("")
+  price        Float    @default(0)
+  oldPrice     Float?
+  stockCount   Int      @default(0)
+  deliveryDays Int?
+  imageUrl     String?
+  supplier     String?
+  supplierGuid String?
+  sourceQuery  String?
+  isActive     Boolean  @default(true)
+  raw          Json?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  offers SupplierOffer[]
+
+  @@index([article])
+  @@index([brand])
+  @@index([category])
+  @@index([isActive])
+}
+
+model SupplierOffer {
+  id              String   @id
+  productId       String
+  supplier        String
+  supplierGuid    String?
+  rawBrand        String
+  rawArticle      String
+  rawName         String
+  priceMin        Float    @default(0)
+  priceMax        Float?
+  stockTotal      Int      @default(0)
+  deliveryMinDays Int?
+  warehouses      String?
+  sourceQuery     String?
+  isCross         Boolean  @default(false)
+  raw             Json?
+  updatedAt       DateTime @updatedAt
+
+  product CatalogProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@index([supplier])
+  @@index([rawArticle])
+}
+
+model VinRequest {
+  id             String   @id @default(cuid())
+  vin            String
+  partsText      String
+  customerName   String
+  contact        String
+  comment        String?
+  status         String   @default("new")
+  vehicle        Json?
+  oeParts        Json?
+  searchTargets  Json?
+  offers         Json?
+  backendLog     String?
+  resultHtmlPath String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([vin])
+  @@index([status])
+  @@index([createdAt])
+}
+
 enum OrderStatus {
   processing
   shipped

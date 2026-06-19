@@ -44,7 +44,11 @@ export default function CartPage() {
                 {items.map((item) => (
                   <div key={item.id} className={styles.itemCard}>
                     <div className={styles.itemImg}>
-                      <Image src={item.image} alt={item.title} fill style={{ objectFit: "contain" }} sizes="80px" />
+                      {item.image ? (
+                        <Image src={item.image} alt={item.title} fill style={{ objectFit: "contain" }} sizes="80px" />
+                      ) : (
+                        <span className={styles.itemImgFallback}>{item.article}</span>
+                      )}
                     </div>
                     <div className={styles.itemInfo}>
                       <p className={styles.itemBrand}>{item.brand}</p>

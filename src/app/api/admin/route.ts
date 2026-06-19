@@ -1,16 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? "admin123";
-
-function checkAuth(req: NextRequest) {
-  const auth = req.headers.get("x-admin-password");
-  return auth === ADMIN_PASSWORD;
-}
+import { checkAdminAuth } from "@/lib/adminAuth";
 
 // GET /api/admin?q=search
 export async function GET(req: NextRequest) {
-  if (!checkAuth(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!checkAdminAuth(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const q = req.nextUrl.searchParams.get("q") ?? "";
 

@@ -1,10 +1,10 @@
 "use client";
 
-import { Suspense, useState, useMemo, type FormEvent } from "react";
+import { Suspense, useEffect, useState, useMemo, type FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { products } from "@/data/products";
+import { products, type Product } from "@/data/products";
 import { CATALOG_CATEGORIES } from "@/data/catalog";
 import SiteHeader from "@/components/SiteHeader";
 import { useCart } from "@/context/CartContext";
@@ -62,17 +62,33 @@ function CatalogContent() {
   const [vinValue, setVinValue]           = useState("");
   const [vinSubmitted, setVinSubmitted]   = useState(false);
   const [sidebarOpen, setSidebarOpen]     = useState(false);
+  const [catalogProducts, setCatalogProducts] = useState<Product[]>(products);
 
   const { addItem } = useCart();
 
   const activeCategory = CATALOG_CATEGORIES.find((c) => c.slug === categorySlug);
 
+  useEffect(() => {
+    let active = true;
+
+    fetch("/api/catalog/products?limit=500")
+      .then((r) => r.json())
+      .then((data) => {
+        if (active && Array.isArray(data) && data.length > 0) {
+          setCatalogProducts(data);
+        }
+      })
+      .catch(() => {});
+
+    return () => { active = false; };
+  }, []);
+
   // ── Filtered + sorted products ──
   const visibleProducts = useMemo(() => {
     const catLabel = categorySlug ? (SLUG_TO_CATEGORY[categorySlug] ?? "") : "";
     let list = categorySlug
-      ? products.filter((p) => catLabel && p.category === catLabel)
-      : products;
+      ? catalogProducts.filter((p) => catLabel && p.category === catLabel)
+      : catalogProducts;
 
     const q = searchQuery.trim().toLowerCase();
     if (q) list = list.filter((p) =>
@@ -87,19 +103,23 @@ function CatalogContent() {
       case "rating":     return [...list].sort((a, b) => b.rating - a.rating);
       default:           return [...list].sort((a, b) => b.reviews - a.reviews);
     }
-  }, [categorySlug, searchQuery, activeBrands, onlyInStock, sort]);
+  }, [categorySlug, searchQuery, activeBrands, onlyInStock, sort, catalogProducts]);
 
   // Brands available in current category
   const availableBrands = useMemo(() => {
     const catLabel = categorySlug ? (SLUG_TO_CATEGORY[categorySlug] ?? "") : "";
-    const list = categorySlug ? products.filter((p) => catLabel && p.category === catLabel) : products;
+    const list = categorySlug ? catalogProducts.filter((p) => catLabel && p.category === catLabel) : catalogProducts;
     return Array.from(new Set(list.map((p) => p.brand))).sort();
-  }, [categorySlug]);
+  }, [categorySlug, catalogProducts]);
 
   function toggleBrand(brand: string) {
     setActiveBrands((prev) => {
       const next = new Set(prev);
-      next.has(brand) ? next.delete(brand) : next.add(brand);
+      if (next.has(brand)) {
+        next.delete(brand);
+      } else {
+        next.add(brand);
+      }
       return next;
     });
   }
@@ -314,14 +334,21 @@ function CatalogContent() {
                 {visibleProducts.map((product) => (
                   <article className={styles.card} key={product.id}>
                     <div className={styles.cardImage}>
-                      <Image
-                        src={product.image}
-                        alt={product.title}
-                        fill
-                        sizes="(max-width: 768px) 50vw, 220px"
-                        style={{ objectFit: "cover" }}
-                        unoptimized
-                      />
+                      {product.image ? (
+                        <Image
+                          src={product.image}
+                          alt={product.title}
+                          fill
+                          sizes="(max-width: 768px) 50vw, 220px"
+                          style={{ objectFit: "cover" }}
+                          unoptimized
+                        />
+                      ) : (
+                        <div className={styles.cardImageEmpty}>
+                          <span>{product.brand || "Автобакс"}</span>
+                          <strong>{product.article || "Фото скоро"}</strong>
+                        </div>
+                      )}
                       {!product.inStock && (
                         <span className={styles.badgeOrder}>Под заказ</span>
                       )}

@@ -61,7 +61,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (user) refreshAccount();
+    let active = true;
+
+    async function loadAccountOnStart() {
+      if (!user || !active) return;
+      await refreshAccount();
+    }
+
+    loadAccountOnStart();
+    return () => { active = false; };
   }, [user, refreshAccount]);
 
   async function sendCode(phone: string) {
@@ -83,6 +91,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const data = await r.json();
     if (!r.ok) return { ok: false, error: data.error };
     setUser(data.user);
+    await refreshAccount();
     return { ok: true };
   }
 

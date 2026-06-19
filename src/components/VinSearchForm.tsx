@@ -1,223 +1,109 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { products } from "@/data/products";
-import { useCart } from "@/context/CartContext";
 import styles from "./VinSearchForm.module.css";
 
-const BRANDS: Record<string, string[]> = {
-  Toyota: ["Camry", "Corolla", "RAV4", "Land Cruiser", "Prius"],
-  Nissan: ["X-Trail", "Qashqai", "Almera", "Pathfinder", "Note"],
-  BMW: ["3 Series", "5 Series", "X5", "X3", "7 Series"],
-  Mercedes: ["C-Class", "E-Class", "GLC", "S-Class", "GLE"],
-  Hyundai: ["Solaris", "Tucson", "Santa Fe", "Creta", "Elantra"],
-  Kia: ["Rio", "Sportage", "Sorento", "Ceed", "K5"],
-  Volkswagen: ["Polo", "Passat", "Tiguan", "Golf", "Touareg"],
-  Ford: ["Focus", "Mondeo", "Explorer", "Kuga", "Transit"],
-  Mazda: ["CX-5", "Mazda 3", "Mazda 6", "CX-9", "MX-5"],
-  Mitsubishi: ["Outlander", "Pajero", "ASX", "Eclipse Cross", "L200"],
-};
-
-const CATEGORIES = [
-  "Тормозная система",
-  "Двигатель и масла",
-  "Оптика",
-  "Подвеска",
-  "Аксессуары",
-];
-
-type SearchState = "idle" | "loading" | "results" | "empty";
+type SubmitState = "idle" | "loading" | "success" | "error";
 
 export default function VinSearchForm() {
   const [vin, setVin] = useState("");
-  const [brand, setBrand] = useState("");
-  const [model, setModel] = useState("");
-  const [category, setCategory] = useState("");
-  const [state, setState] = useState<SearchState>("idle");
-  const [results, setResults] = useState(products);
-  const { addItem } = useCart();
+  const [partsText, setPartsText] = useState("");
+  const [customerName, setCustomerName] = useState("");
+  const [contact, setContact] = useState("");
+  const [comment, setComment] = useState("");
+  const [state, setState] = useState<SubmitState>("idle");
+  const [message, setMessage] = useState("");
 
-  const models = brand ? (BRANDS[brand] ?? []) : [];
-
-  function handleSearch(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setState("loading");
+    setMessage("");
 
-    // Заглушка: имитируем задержку поиска
-    setTimeout(() => {
-      let filtered = products;
-      if (category) {
-        filtered = filtered.filter((p) => p.category === category);
-      }
-      // VIN/артикул — ищем по совпадению в title или article
-      if (vin.trim()) {
-        const q = vin.trim().toLowerCase();
-        filtered = filtered.filter(
-          (p) =>
-            p.title.toLowerCase().includes(q) ||
-            p.article.toLowerCase().includes(q)
-        );
-      }
-      setResults(filtered);
-      setState(filtered.length > 0 ? "results" : "empty");
-    }, 600);
-  }
+    const response = await fetch("/api/vin-requests", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ vin, partsText, customerName, contact, comment }),
+    });
+    const data = await response.json();
 
-  function handleReset() {
+    if (!response.ok) {
+      setState("error");
+      setMessage(data.error ?? "Не удалось отправить заявку");
+      return;
+    }
+
+    setState("success");
+    setMessage(
+      data.offersCount > 0
+        ? `Заявка ${data.id} создана. В админке уже есть найденные предложения.`
+        : `Заявка ${data.id} создана. Менеджер проверит совместимость и подберет варианты.`
+    );
     setVin("");
-    setBrand("");
-    setModel("");
-    setCategory("");
-    setState("idle");
-    setResults(products);
+    setPartsText("");
+    setCustomerName("");
+    setContact("");
+    setComment("");
   }
 
   return (
     <div className={styles.wrap}>
-      <form className={styles.form} onSubmit={handleSearch}>
-        {/* VIN */}
+      <form className={styles.form} onSubmit={handleSubmit}>
         <div className={styles.vinRow}>
           <input
             className={styles.vinInput}
-            placeholder="Введите VIN, артикул или название детали"
+            placeholder="VIN или номер кузова"
             value={vin}
             onChange={(e) => setVin(e.target.value)}
-            aria-label="VIN или артикул"
+            aria-label="VIN или номер кузова"
           />
         </div>
 
-        {/* Selects */}
+        <div className={styles.vinRow}>
+          <input
+            className={styles.vinInput}
+            placeholder="Какие детали нужны: воздушный фильтр, колодки, стойки..."
+            value={partsText}
+            onChange={(e) => setPartsText(e.target.value)}
+            aria-label="Какие детали нужны"
+          />
+        </div>
+
         <div className={styles.selects}>
-          <select
-            className={styles.select}
-            value={brand}
-            onChange={(e) => { setBrand(e.target.value); setModel(""); }}
-            aria-label="Марка"
-          >
-            <option value="">Выберите марку</option>
-            {Object.keys(BRANDS).map((b) => (
-              <option key={b} value={b}>{b}</option>
-            ))}
-          </select>
-
-          <select
-            className={styles.select}
-            value={model}
-            onChange={(e) => setModel(e.target.value)}
-            aria-label="Модель"
-            disabled={!brand}
-          >
-            <option value="">Выберите модель</option>
-            {models.map((m) => (
-              <option key={m} value={m}>{m}</option>
-            ))}
-          </select>
-
-          <select
-            className={styles.select}
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            aria-label="Категория"
-          >
-            <option value="">Выберите категорию</option>
-            {CATEGORIES.map((c) => (
-              <option key={c} value={c}>{c}</option>
-            ))}
-          </select>
-
+          <input
+            className={styles.vinInput}
+            placeholder="Ваше имя"
+            value={customerName}
+            onChange={(e) => setCustomerName(e.target.value)}
+            aria-label="Ваше имя"
+          />
+          <input
+            className={styles.vinInput}
+            placeholder="Телефон или Telegram"
+            value={contact}
+            onChange={(e) => setContact(e.target.value)}
+            aria-label="Телефон или Telegram"
+          />
+          <textarea
+            className={styles.textarea}
+            placeholder="Комментарий: оригинал/аналог, бюджет, срочность"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            aria-label="Комментарий"
+          />
           <button className={styles.submitBtn} type="submit" disabled={state === "loading"}>
-            {state === "loading" ? (
-              <span className={styles.spinner} aria-hidden="true" />
-            ) : (
-              "Найти"
-            )}
+            {state === "loading" ? <span className={styles.spinner} aria-hidden="true" /> : "Отправить"}
           </button>
         </div>
       </form>
 
-      {/* Help box */}
       <aside className={styles.helpBox}>
-        <strong>Не знаете артикул?</strong>
-        <p>Покажем подобрать нужную деталь вручную</p>
-        <Link href="/#request" className={styles.helpLink}>Оставить заявку</Link>
+        <strong>Подберем по VIN</strong>
+        <p>Проверим совместимость менеджером, покажем оригинал, аналоги, наличие, цену и срок поставки.</p>
       </aside>
 
-      {/* Results */}
-      {state === "loading" && (
-        <div className={styles.loadingRow}>
-          <span className={styles.spinner} />
-          <span>Ищем подходящие запчасти…</span>
-        </div>
-      )}
-
-      {state === "empty" && (
-        <div className={styles.emptyBox}>
-          <span className={styles.emptyIcon}>🔍</span>
-          <p className={styles.emptyTitle}>Ничего не найдено</p>
-          <p className={styles.emptyText}>
-            Попробуйте изменить параметры поиска или{" "}
-            <Link href="/#request">оставьте заявку</Link> — мы подберём деталь вручную.
-          </p>
-          <button className={styles.resetBtn} onClick={handleReset}>
-            Сбросить поиск
-          </button>
-        </div>
-      )}
-
-      {state === "results" && (
-        <div className={styles.results}>
-          <div className={styles.resultsHeader}>
-            <span className={styles.resultsCount}>
-              Найдено: {results.length} {results.length === 1 ? "товар" : results.length < 5 ? "товара" : "товаров"}
-            </span>
-            {(brand || model || category || vin) && (
-              <div className={styles.activeTags}>
-                {vin && <span className={styles.tag}>{vin} ✕</span>}
-                {brand && <span className={styles.tag}>{brand}{model ? ` · ${model}` : ""} ✕</span>}
-                {category && <span className={styles.tag}>{category} ✕</span>}
-              </div>
-            )}
-            <button className={styles.resetBtn} onClick={handleReset}>
-              Сбросить
-            </button>
-          </div>
-
-          <div className={styles.grid}>
-            {results.map((p) => (
-              <article className={styles.card} key={p.id}>
-                <div className={styles.cardImg}>
-                  <Image
-                    src={p.image}
-                    alt={p.title}
-                    fill
-                    sizes="(max-width: 640px) 100vw, 220px"
-                    unoptimized
-                  />
-                  <span className={`${styles.badge} ${p.inStock ? styles.inStock : styles.outOfStock}`}>
-                    {p.inStock ? "В наличии" : "Под заказ"}
-                  </span>
-                </div>
-                <div className={styles.cardBody}>
-                  <p className={styles.cardTitle}>{p.title}</p>
-                  <p className={styles.cardArticle}>Арт: {p.article}</p>
-                  <p className={styles.cardPrice}>{p.price.toLocaleString("ru-RU")} ₽</p>
-                </div>
-                <div className={styles.cardActions}>
-                  <Link href="/catalog" className={styles.btnDetail}>Подробнее</Link>
-                  <button className={styles.btnCart} onClick={() => addItem(p)}>
-                    В корзину
-                  </button>
-                </div>
-              </article>
-            ))}
-          </div>
-
-          <div className={styles.resultsCta}>
-            <p>Не нашли нужную деталь? Оставьте заявку и мы подберём вручную.</p>
-            <Link href="/#request" className={styles.ctaBtn}>Оставить заявку</Link>
-          </div>
+      {message && (
+        <div className={state === "error" ? styles.errorBox : styles.successBox}>
+          {message}
         </div>
       )}
     </div>

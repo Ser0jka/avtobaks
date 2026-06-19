@@ -32,8 +32,6 @@ export default function AccountPage() {
 
   useEffect(() => {
     if (!user) { router.push("/account/login"); return; }
-    setName(user.name);
-    setEmail(user.email ?? "");
   }, [user, router]);
 
   if (!user) return null;
@@ -47,6 +45,13 @@ export default function AccountPage() {
   }
 
   const favProducts = products.filter((p) => favorites.includes(p.id));
+
+  function openEditMode() {
+    if (!user) return;
+    setName(user.name);
+    setEmail(user.email ?? "");
+    setEditMode(true);
+  }
 
   return (
     <div className={styles.page}>
@@ -207,7 +212,7 @@ export default function AccountPage() {
                         <span className={styles.profileLabel}>Email</span>
                         <span className={styles.profileValue}>{user.email || <span className={styles.notSet}>Не указан</span>}</span>
                       </div>
-                      <button className={styles.editBtn} onClick={() => setEditMode(true)}>
+                      <button className={styles.editBtn} onClick={openEditMode}>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                         Редактировать
                       </button>

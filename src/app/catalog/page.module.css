@@ -335,6 +335,48 @@
   background: #f5f6f8;
 }
 
+.cardImageEmpty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  padding: 0.85rem;
+  background:
+    linear-gradient(135deg, rgba(17,21,27,0.04), rgba(17,21,27,0.12)),
+    radial-gradient(circle at 72% 24%, rgba(232,23,34,0.16), transparent 34%),
+    #f3f5f7;
+  color: #11151b;
+}
+
+.cardImageEmpty::before {
+  content: "";
+  position: absolute;
+  inset: 18%;
+  border: 1px solid rgba(17,21,27,0.12);
+  border-radius: 50%;
+}
+
+.cardImageEmpty span,
+.cardImageEmpty strong {
+  position: relative;
+  z-index: 1;
+}
+
+.cardImageEmpty span {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #66717e;
+  text-transform: uppercase;
+}
+
+.cardImageEmpty strong {
+  font-size: 0.9rem;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
 .badgeOrder {
   position: absolute; top: 0.5rem; left: 0.5rem;
   font-size: 0.68rem; font-weight: 700;
