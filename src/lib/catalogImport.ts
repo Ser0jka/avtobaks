@@ -12,6 +12,11 @@ function text(value: unknown, fallback = "") {
   return typeof value === "string" ? value : fallback;
 }
 
+/** Нормализует Windows-пути (обратные слеши) в Unix */
+function normalizePath(p: string) {
+  return p.replace(/\\/g, "/");
+}
+
 function number(value: unknown, fallback = 0) {
   const parsed = typeof value === "number" ? value : Number(value);
   return Number.isFinite(parsed) ? parsed : fallback;
@@ -33,7 +38,7 @@ function json(value: unknown) {
 function catalogImageUrl(image: JsonRecord | undefined, imageId: string) {
   if (!image) return null;
 
-  const storagePath = text(image.storage_path);
+  const storagePath = normalizePath(text(image.storage_path));
   if (storagePath) {
     return `/api/catalog/image/${encodeURIComponent(text(image.id, imageId))}`;
   }
@@ -173,17 +178,30 @@ export async function importSupplierCatalog() {
   return { productCount, offerCount };
 }
 
+// ── Кеш product_images.json ─────────────────────────────────
+let _imagesCache: Record<string, JsonRecord> | null = null;
+
+async function getImages(): Promise<Record<string, JsonRecord>> {
+  if (!_imagesCache) {
+    _imagesCache = await readJsonObject("product_images.json");
+  }
+  return _imagesCache;
+}
+
 export async function findCatalogImage(imageId: string) {
-  const images = await readJsonObject("product_images.json");
+  const images = await getImages();
   const image = images[imageId];
   if (!image) return null;
 
-  const storagePath = text(image.storage_path);
-  const relativePath = storagePath.replace(/^catalog[\\/]/, "");
+  // Нормализуем Windows-слеши → Unix
+  const storagePath = normalizePath(text(image.storage_path));
+  // storage_path = "catalog/image_files/img_xxx.jpg" — убираем "catalog/" префикс
+  const relativePath = storagePath.replace(/^catalog\//, "");
   const filePath = path.resolve(CATALOG_ROOT, relativePath);
   const imageRoot = path.resolve(CATALOG_ROOT, "image_files");
 
-  if (!filePath.startsWith(imageRoot)) return null;
+  // Защита от path traversal
+  if (!filePath.startsWith(imageRoot + path.sep) && filePath !== imageRoot) return null;
   return filePath;
 }
 

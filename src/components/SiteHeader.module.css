@@ -200,6 +200,36 @@
   flex-shrink: 0;
 }
 
+.actionActive { color: #e81722; }
+
+.garageIconWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.garageBadge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: #64748b;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+  line-height: 1;
+}
+
+.garageBadgeActive {
+  background: #e81722;
+}
+
 /* ── Sub nav ───────────────────────────────────────────────── */
 .subNav {
   background: #fff;

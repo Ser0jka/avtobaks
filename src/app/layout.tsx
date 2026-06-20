@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
+import { GarageProvider } from "@/context/GarageContext";
 import { CartDrawer, CartFloatButton } from "@/components/CartDrawer";
 import FloatContacts from "@/components/FloatContacts";
 import ChatWidget from "@/components/ChatWidget";
@@ -36,13 +37,15 @@ export default function RootLayout({
     <html lang="ru" className={gilroy.variable}>
       <body>
         <AuthProvider>
-          <CartProvider>
-            {children}
-            <CartDrawer />
-            <CartFloatButton />
-            <FloatContacts />
-            <ChatWidget />
-          </CartProvider>
+          <GarageProvider>
+            <CartProvider>
+              {children}
+              <CartDrawer />
+              <CartFloatButton />
+              <FloatContacts />
+              <ChatWidget />
+            </CartProvider>
+          </GarageProvider>
         </AuthProvider>
       </body>
     </html>

@@ -6,17 +6,18 @@ import { useState } from "react";
 import CatalogDropdown from "@/components/CatalogDropdown";
 import MobileMenu from "@/components/MobileMenu";
 import { useAuth } from "@/context/AuthContext";
+import { useGarage } from "@/context/GarageContext";
 import styles from "./SiteHeader.module.css";
 
 const navItems = [
-  { label: "Подбор по VIN", href: "/#search" },
+  { label: "Подбор по VIN", href: "/vin" },
   { label: "Поставщики", href: "/#suppliers" },
   { label: "О компании", href: "/#advantages" },
   { label: "Контакты", href: "/contacts" },
 ];
 
 type SiteHeaderProps = {
-  active?: "home" | "catalog" | "contacts";
+  active?: "home" | "catalog" | "contacts" | "garage";
   showSearch?: boolean;
 };
 
@@ -24,6 +25,7 @@ export default function SiteHeader({ active, showSearch = false }: SiteHeaderPro
   const [query, setQuery] = useState("");
   const router = useRouter();
   const { user } = useAuth();
+  const { activeCar, cars } = useGarage();
 
   function handleSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -86,6 +88,23 @@ export default function SiteHeader({ active, showSearch = false }: SiteHeaderPro
           </form>
 
           <div className={styles.actions}>
+            {/* Гараж */}
+            <Link href="/garage" className={`${styles.action} ${active === "garage" ? styles.actionActive : ""}`}>
+              <span className={styles.garageIconWrap}>
+                <svg width="22" height="22" viewBox="0 0 64 40" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="4" y="16" width="56" height="18" rx="4"/>
+                  <path d="M12 16l7-12h26l7 12"/>
+                  <circle cx="16" cy="34" r="5"/><circle cx="48" cy="34" r="5"/>
+                  <path d="M21 34h22"/>
+                </svg>
+                {cars.length > 0 && (
+                  <span className={`${styles.garageBadge} ${activeCar ? styles.garageBadgeActive : ""}`}>
+                    {cars.length}
+                  </span>
+                )}
+              </span>
+              <span>Гараж</span>
+            </Link>
             <Link href={user ? "/account" : "/account/login"} className={styles.action}>
               {user ? (
                 <span className={styles.userAvatar}>{user.name.charAt(0).toUpperCase()}</span>

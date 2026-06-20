@@ -1,0 +1,347 @@
+.page {
+  min-height: 100vh;
+  background: #f5f6f8;
+  color: #11151b;
+}
+.wrap {
+  width: calc(100% - 2rem);
+  max-width: 1100px;
+  margin: 0 auto;
+  padding-bottom: 4rem;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: #8a96a3;
+  padding: 1.25rem 0 0;
+}
+.breadcrumb a { color: #8a96a3; text-decoration: none; }
+.breadcrumb a:hover { color: #e81722; }
+
+/* Hero */
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin: 1.5rem 0 1.75rem;
+}
+.heroIcon {
+  width: 64px;
+  height: 64px;
+  background: #fff0f0;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e81722;
+  flex-shrink: 0;
+}
+.heroTitle {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #11151b;
+  margin: 0 0 0.3rem;
+  letter-spacing: -0.02em;
+}
+.heroSub {
+  font-size: 0.9rem;
+  color: #8a96a3;
+  margin: 0;
+  max-width: 520px;
+  line-height: 1.5;
+}
+
+/* Steps */
+.steps {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid #e8eaed;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.75rem;
+  flex-wrap: wrap;
+}
+.step {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.stepNum {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #e81722;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.stepText {
+  font-size: 0.875rem;
+  color: #3d4654;
+  margin: 0;
+  font-weight: 500;
+}
+.stepArrow {
+  color: #d1d5db;
+  font-size: 1.1rem;
+}
+
+/* Layout */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* Form card */
+.formCard {
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid #e8eaed;
+  padding: 1.75rem;
+}
+.formTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #11151b;
+  margin: 0 0 1.5rem;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.fieldRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+.label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #3d4654;
+}
+.input {
+  padding: 0.65rem 0.9rem;
+  border: 1.5px solid #e8eaed;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #11151b;
+  font-family: inherit;
+  outline: none;
+  background: #fff;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+.input:focus { border-color: #e81722; }
+.inputMono { font-family: monospace; letter-spacing: 0.08em; font-size: 1rem; }
+.textarea { resize: vertical; min-height: 80px; }
+.fieldHint { font-size: 0.75rem; color: #8a96a3; margin: 0; }
+
+/* VIN info card */
+.vinCard {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 0.9rem;
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  color: #166534;
+  margin-top: 0.25rem;
+}
+.vinCard svg { flex-shrink: 0; color: #16a34a; }
+.vinEngine { color: #8a96a3; }
+
+/* Category buttons */
+.catGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+.catBtn {
+  padding: 0.35rem 0.75rem;
+  border: 1.5px solid #e8eaed;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #3d4654;
+  background: #fff;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.catBtn:hover { border-color: #e81722; color: #e81722; }
+.catBtnActive {
+  background: #e81722;
+  border-color: #e81722;
+  color: #fff;
+}
+
+/* Submit */
+.btnSubmit {
+  width: 100%;
+  padding: 0.9rem;
+  background: #e81722;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.btnSubmit:hover:not(:disabled) { background: #c4111c; }
+.btnSubmit:disabled { opacity: 0.6; cursor: not-allowed; }
+.formNote { font-size: 0.78rem; color: #8a96a3; text-align: center; margin: 0; }
+.errorMsg { font-size: 0.82rem; color: #e81722; margin: 0; }
+
+/* Spinner */
+.miniSpinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+.vinCard .miniSpinner {
+  border-color: #e8eaed;
+  border-top-color: #16a34a;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Success */
+.success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem 1rem;
+  text-align: center;
+}
+.successIcon {
+  width: 56px;
+  height: 56px;
+  background: #dcfce7;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #16a34a;
+}
+.successTitle { font-size: 1.3rem; font-weight: 800; color: #11151b; margin: 0; }
+.successText { font-size: 0.9rem; color: #8a96a3; margin: 0; max-width: 340px; }
+.btnReset {
+  padding: 0.6rem 1.25rem;
+  border: 1.5px solid #e8eaed;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  background: #fff;
+  color: #3d4654;
+  transition: all 0.15s;
+}
+.btnReset:hover { border-color: #11151b; color: #11151b; }
+
+/* Sidebar */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: sticky;
+  top: 80px;
+}
+
+.activeCar {
+  background: #fff;
+  border-radius: 12px;
+  border: 2px solid #e81722;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.activeCarLabel { font-size: 0.75rem; color: #8a96a3; margin: 0; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+.activeCarName { font-size: 0.95rem; font-weight: 700; color: #11151b; margin: 0; }
+.btnUseGarage {
+  padding: 0.4rem 0.75rem;
+  border: 1.5px solid #e81722;
+  border-radius: 7px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #e81722;
+  background: #fff;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+  align-self: flex-start;
+  margin-top: 0.25rem;
+}
+.btnUseGarage:hover { background: #e81722; color: #fff; }
+
+.infoCard {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e8eaed;
+  padding: 1rem 1.25rem;
+}
+.infoTitle {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #11151b;
+  margin: 0 0 0.6rem;
+}
+.infoList {
+  margin: 0;
+  padding: 0 0 0 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.infoList li {
+  font-size: 0.8rem;
+  color: #8a96a3;
+  line-height: 1.4;
+}
+
+/* Responsive */
+@media (max-width: 860px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { position: static; }
+  .steps { gap: 0.5rem; }
+  .stepArrow { display: none; }
+}
+@media (max-width: 600px) {
+  .fieldRow { grid-template-columns: 1fr; }
+  .heroTitle { font-size: 1.4rem; }
+  .wrap { width: calc(100% - 1rem); }
+}
