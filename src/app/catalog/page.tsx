@@ -176,14 +176,14 @@ function CatalogContent() {
   const { addItem } = useCart();
   const { activeCar } = useGarage();
 
-  const activeCategory = CATALOG_CATEGORIES.find((c) => c.slug === categorySlug);
   const catLabel = categorySlug ? (SLUG_TO_CATEGORY[categorySlug] ?? "") : "";
-  const activeCatFilterDefs = catLabel ? (CATEGORY_FILTERS[catLabel] ?? []) : [];
+  const activeCategory = CATALOG_CATEGORIES.find((c) => c.slug === categorySlug);
+  const activeCatFilterDefs = useMemo(() => (
+    catLabel ? (CATEGORY_FILTERS[catLabel] ?? []) : []
+  ), [catLabel]);
 
   useEffect(() => {
     let active = true;
-    setLoadingProducts(true);
-    setLoadError(null);
 
     fetch("/api/catalog/products?limit=500")
       .then((r) => {

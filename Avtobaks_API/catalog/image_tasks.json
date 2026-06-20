@@ -6,7 +6,7 @@
     "name": "Лампа H1 12V 55W P14.5s COOL BLUE INTENSE (next generation) 5000К",
     "reason": "image_not_found",
     "status": "open",
-    "updated_at": "2026-06-19T20:44:09"
+    "updated_at": "2026-06-20T23:08:34"
   },
   "prd_b5c5612841815d": {
     "product_id": "prd_b5c5612841815d",
@@ -15,7 +15,7 @@
     "name": "Лампа 55W",
     "reason": "image_not_found",
     "status": "open",
-    "updated_at": "2026-06-19T20:44:42"
+    "updated_at": "2026-06-20T23:08:38"
   },
   "prd_862f339d0a09b5": {
     "product_id": "prd_862f339d0a09b5",
@@ -24,6 +24,60 @@
     "name": "H1 12V (55W) Лампа EXTRA LifeTime, двойной картонный бокс",
     "reason": "image_not_found",
     "status": "open",
-    "updated_at": "2026-06-19T20:45:00"
+    "updated_at": "2026-06-20T23:08:42"
+  },
+  "prd_ec71c70f9a6e1e": {
+    "product_id": "prd_ec71c70f9a6e1e",
+    "brand": "Narva",
+    "article": "18057",
+    "name": "Комплект светодиодных ламп LED H1 RPL2 12В/24В 6500К X2",
+    "reason": "image_not_found",
+    "status": "open",
+    "updated_at": "2026-06-20T23:09:54"
+  },
+  "prd_8c70fc54871d6c": {
+    "product_id": "prd_8c70fc54871d6c",
+    "brand": "LYNXauto",
+    "article": "L10155Y",
+    "name": "Лампа H1 12V 55W P14.5s YELLOW",
+    "reason": "image_not_found",
+    "status": "open",
+    "updated_at": "2026-06-20T23:11:18"
+  },
+  "prd_56f666a2387638": {
+    "product_id": "prd_56f666a2387638",
+    "brand": "SCT Germany",
+    "article": "202037",
+    "name": "Лампа накаливания основного света",
+    "reason": "image_not_found",
+    "status": "open",
+    "updated_at": "2026-06-20T23:13:51"
+  },
+  "prd_afb8c690594398": {
+    "product_id": "prd_afb8c690594398",
+    "brand": "Valeo",
+    "article": "032504",
+    "name": "Лампа H1 Blue Effect, блистер",
+    "reason": "image_not_found",
+    "status": "open",
+    "updated_at": "2026-06-20T23:14:46"
+  },
+  "prd_87b81a5fd9e9a2": {
+    "product_id": "prd_87b81a5fd9e9a2",
+    "brand": "Vettler",
+    "article": "H112V55W4",
+    "name": "Лампа галоген.H1 12 V 55 W всепогодная 4 сезона HD",
+    "reason": "image_not_found",
+    "status": "open",
+    "updated_at": "2026-06-20T23:14:54"
+  },
+  "prd_99ac29a8bb3fb3": {
+    "product_id": "prd_99ac29a8bb3fb3",
+    "brand": "Miles",
+    "article": "BL014",
+    "name": "Лампа H1 12V 55W P14,5s",
+    "reason": "image_not_found",
+    "status": "open",
+    "updated_at": "2026-06-20T23:16:06"
   }
 }

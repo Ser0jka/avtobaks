@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/Avtobaks_API/.venv/
 /.pnp
 .pnp.*
 .yarn/*
@@ -23,6 +24,9 @@
 # misc
 .DS_Store
 *.pem
+*.pyc
+__pycache__/
+_tmp_*
 
 # debug
 npm-debug.log*

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import SiteHeader from "@/components/SiteHeader";
@@ -63,15 +64,25 @@ export default function ProductPage() {
   const [added, setAdded] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
-    setError(null);
+    let active = true;
     fetch(`/api/catalog/products/${id}`)
       .then((r) => {
         if (!r.ok) throw new Error(r.status === 404 ? "Товар не найден" : `Ошибка ${r.status}`);
         return r.json();
       })
-      .then((data: ProductDetail) => { setProduct(data); setLoading(false); })
-      .catch((e: Error) => { setError(e.message); setLoading(false); });
+      .then((data: ProductDetail) => {
+        if (!active) return;
+        setProduct(data);
+        setError(null);
+        setLoading(false);
+      })
+      .catch((e: Error) => {
+        if (!active) return;
+        setError(e.message);
+        setLoading(false);
+      });
+
+    return () => { active = false; };
   }, [id]);
 
   function handleAddToCart() {
@@ -168,14 +179,29 @@ export default function ProductPage() {
                     className={`${styles.thumb} ${i === activeImg ? styles.thumbActive : ""}`}
                     onClick={() => setActiveImg(i)}
                   >
-                    <img src={src} alt={`${product.title} ${i + 1}`} />
+                    <Image
+                      src={src}
+                      alt={`${product.title} ${i + 1}`}
+                      fill
+                      sizes="72px"
+                      style={{ objectFit: "contain", padding: 4 }}
+                      unoptimized
+                    />
                   </button>
                 ))}
               </div>
             )}
             <div className={styles.mainImage}>
               {currentImg ? (
-                <img src={currentImg} alt={product.title} />
+                <Image
+                  src={currentImg}
+                  alt={product.title}
+                  fill
+                  sizes="(max-width: 900px) 100vw, 520px"
+                  style={{ objectFit: "contain", padding: "1.5rem" }}
+                  unoptimized
+                  priority
+                />
               ) : (
                 <div className={styles.noPhoto}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round">

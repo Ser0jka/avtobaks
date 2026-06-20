@@ -867,7 +867,10 @@ def download_image(url: str, out_dir: Path, image_id: str) -> str:
     if path.exists() and path.stat().st_size > 100:
         return str(path)
 
-    response = make_session().get(url, timeout=30)
+    try:
+        response = make_session().get(url, timeout=30)
+    except requests.RequestException:
+        return ""
     if response.status_code != 200:
         return ""
 

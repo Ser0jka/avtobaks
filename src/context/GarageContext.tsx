@@ -9,12 +9,12 @@ import {
 } from "react";
 
 export type GarageCar = {
-  id: string;          // случайный uuid
+  id: string;
   vin: string;
-  brand: string;       // марка — из VIN или введённая вручную
+  brand: string;
   model: string;
   year: number | null;
-  label: string;       // удобное название "Toyota Camry 2018"
+  label: string;
   addedAt: number;
 };
 
@@ -31,21 +31,29 @@ const GarageContext = createContext<GarageCtx | null>(null);
 const STORAGE_KEY = "avtobaks_garage";
 const ACTIVE_KEY = "avtobaks_garage_active";
 
+function readGarageCars() {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) as GarageCar[] : [];
+  } catch {
+    return [];
+  }
+}
+
+function readActiveCarId() {
+  if (typeof window === "undefined") return null;
+  try {
+    return localStorage.getItem(ACTIVE_KEY);
+  } catch {
+    return null;
+  }
+}
+
 export function GarageProvider({ children }: { children: ReactNode }) {
-  const [cars, setCars] = useState<GarageCar[]>([]);
-  const [activeId, setActiveId] = useState<string | null>(null);
+  const [cars, setCars] = useState<GarageCar[]>(readGarageCars);
+  const [activeId, setActiveId] = useState<string | null>(readActiveCarId);
 
-  // Загружаем из localStorage при маунте
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) setCars(JSON.parse(raw) as GarageCar[]);
-      const act = localStorage.getItem(ACTIVE_KEY);
-      if (act) setActiveId(act);
-    } catch {}
-  }, []);
-
-  // Сохраняем при изменении
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(cars));
@@ -71,7 +79,7 @@ export function GarageProvider({ children }: { children: ReactNode }) {
   }
 
   function removeCar(id: string) {
-    setCars((prev) => prev.filter((c) => c.id !== id));
+    setCars((prev) => prev.filter((car) => car.id !== id));
     setActiveId((prev) => (prev === id ? null : prev));
   }
 
@@ -79,7 +87,7 @@ export function GarageProvider({ children }: { children: ReactNode }) {
     setActiveId(id);
   }
 
-  const activeCar = cars.find((c) => c.id === activeId) ?? null;
+  const activeCar = cars.find((car) => car.id === activeId) ?? null;
 
   return (
     <GarageContext.Provider value={{ cars, activeCar, setActiveCar, addCar, removeCar }}>

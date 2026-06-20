@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAuth } from "@/lib/adminAuth";
+import { proxyCatalogAdmin } from "@/lib/catalogAdminProxy";
 import { prisma } from "@/lib/prisma";
 
 const EDITABLE_FIELDS = [
@@ -21,6 +22,13 @@ export async function PATCH(req: NextRequest, context: { params: Promise<{ id: s
 
   const { id } = await context.params;
   const body = await req.json();
+  const proxied = await proxyCatalogAdmin(`catalog/${encodeURIComponent(id)}`, {
+    method: "PATCH",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (proxied) return proxied;
+
   const data: Record<string, unknown> = {};
 
   for (const field of EDITABLE_FIELDS) {

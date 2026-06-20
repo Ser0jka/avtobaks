@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, type FormEvent } from "react";
+import { useCallback, useState, useRef, useEffect, type FormEvent } from "react";
 import Link from "next/link";
 import SiteHeader from "@/components/SiteHeader";
 import { useGarage } from "@/context/GarageContext";
@@ -71,14 +71,7 @@ export default function VinPage() {
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Если есть активная машина — грузим инфо сразу
-  useEffect(() => {
-    if (activeCar?.vin && activeCar.vin.length === 17) {
-      loadVinInfo(activeCar.vin);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  async function loadVinInfo(vinVal: string) {
+  const loadVinInfo = useCallback(async (vinVal: string) => {
     setVinLoading(true);
     setVinInfo(null);
     try {
@@ -97,7 +90,16 @@ export default function VinPage() {
       }
     } catch { /* ignore */ }
     setVinLoading(false);
-  }
+  }, []);
+
+  useEffect(() => {
+    if (activeCar?.vin && activeCar.vin.length === 17) {
+      const timer = window.setTimeout(() => {
+        void loadVinInfo(activeCar.vin);
+      }, 0);
+      return () => window.clearTimeout(timer);
+    }
+  }, [activeCar?.vin, loadVinInfo]);
 
   function handleVinChange(v: string) {
     const clean = v.replace(/[^A-Za-z0-9]/g, "").slice(0, 17).toUpperCase();
